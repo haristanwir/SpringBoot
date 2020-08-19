@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+	targetNamespace="http://soap.esb.com/springboot/EmployeeWS"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://soap.esb.com/springboot/EmployeeWS">
+
+	<element name="SetEmployeeRequest">
+		<complexType>
+			<sequence>
+				<element name="Request" type="tns:EmployeeReq_Type" minOccurs="1" maxOccurs="1"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<element name="SetEmployeeResponse">
+		<complexType>
+			<sequence>
+				<element name="Response" type="tns:EmployeeResp_Type" minOccurs="1" maxOccurs="1"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="EmployeeReq_Type">
+		<sequence>
+			<element name="ID" type="string" maxOccurs="1" minOccurs="1"></element>
+			<element name="Name" type="string" maxOccurs="1"
+				minOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="EmployeeResp_Type">
+		<sequence>
+			<element name="ResultCode" type="string" minOccurs="1"
+				maxOccurs="1"></element>
+			<element name="ResultDesc" type="string" minOccurs="1"
+				maxOccurs="1"></element>
+		</sequence>
+	</complexType>
+
+	<element name="GetEmployeeRequest">
+		<complexType>
+			<sequence>
+				<element name="Request">
+					<complexType>
+						<sequence>
+							<element name="ID" type="string" minOccurs="1"
+								maxOccurs="1">
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+    		</sequence>
+		</complexType>
+	</element>
+
+    <element name="GetEmployeeResponse">
+    	<complexType>
+    		<sequence>
+    			<element name="Response" type="tns:EmployeeReq_Type" minOccurs="1" maxOccurs="1"></element>
+    		</sequence>
+    	</complexType></element>
+
+</schema>
