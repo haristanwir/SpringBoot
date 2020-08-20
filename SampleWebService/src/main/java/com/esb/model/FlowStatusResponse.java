@@ -1,15 +1,9 @@
 package com.esb.model;
 
+import lombok.Data;
+
+@Data 
 public class FlowStatusResponse {
-
 	private Integer status = null;
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 
 }
