@@ -17,7 +17,7 @@ public class SMSNotificationController {
 	@Autowired
 	SMSNotificationService smsService;
 
-	@RequestMapping(path = "/notificationservice/v1/sendSMS", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/notificationservice/v1/sendSMS", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SMSResponse> sendSMS(@RequestBody SMSRequest smsRequest) {
 		return ResponseEntity.ok(smsService.sendSMS(smsRequest));
 	}

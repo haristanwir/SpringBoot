@@ -79,7 +79,7 @@ public class SMSNotificationService {
 			returnDesc = "SMS sent to SMSC for delivery";
 		} else {
 			returnCode = "999";
-			returnDesc = "SMS sending failed";
+			returnDesc = "SMS sending failed, please retry";
 		}
 
 		SMSResponse smsResponse = new SMSResponse();

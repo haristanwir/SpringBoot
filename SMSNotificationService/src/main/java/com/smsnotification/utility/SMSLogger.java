@@ -1,6 +1,5 @@
 package com.smsnotification.utility;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -24,13 +23,7 @@ public class SMSLogger {
 			standardPattern.addAttribute("pattern", "%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n");
 			console.add(standardPattern);
 			builder.add(console);
-			RootLoggerComponentBuilder asynclogger = asynclogger = builder.newAsyncRootLogger(Level.DEBUG);
-			try {
-				if (Utility.getProperty("LOG_LEVEL").equalsIgnoreCase("info")) {
-					asynclogger = builder.newAsyncRootLogger(Level.INFO);
-				}
-			} catch (Exception ex1) {
-			}
+			RootLoggerComponentBuilder asynclogger = asynclogger = builder.newAsyncRootLogger();
 			asynclogger.addAttribute("additivity", false);
 			asynclogger.add(builder.newAppenderRef("console"));
 			builder.add(asynclogger);
