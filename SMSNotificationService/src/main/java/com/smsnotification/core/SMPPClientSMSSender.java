@@ -61,8 +61,8 @@ public class SMPPClientSMSSender {
 		tpsController = new ThroughputController(Integer.parseInt(Utility.getProperty(Constant.SMPP_CLIENT_MAX_TPS)));
 		srcTON = Utility.getTONByteValue(Utility.getProperty(Constant.SMPP_CLIENT_SRC_TON));
 		destTON = Utility.getTONByteValue(Utility.getProperty(Constant.SMPP_CLIENT_DEST_TON));
-		srcNPI = Utility.getTONByteValue(Utility.getProperty(Constant.SMPP_CLIENT_SRC_NPI));
-		destNPI = Utility.getTONByteValue(Utility.getProperty(Constant.SMPP_CLIENT_DEST_NPI));
+		srcNPI = Utility.getNPIByteValue(Utility.getProperty(Constant.SMPP_CLIENT_SRC_NPI));
+		destNPI = Utility.getNPIByteValue(Utility.getProperty(Constant.SMPP_CLIENT_DEST_NPI));
 		timeout = Long.parseLong(Utility.getProperty(Constant.SMPP_CLIENT_BIND_TIMEOUT));
 		isPayload = Boolean.valueOf(Utility.getProperty(Constant.SMPP_CLIENT_PAYLOAD_FLAG));
 		isLongSMS_SAR = Boolean.valueOf(Utility.getProperty(Constant.SMPP_CLIENT_MULTIPART_SAR_FLAG));
@@ -87,7 +87,7 @@ public class SMPPClientSMSSender {
 			dataCodingValue = 8;
 		}
 
-		if ((dataCodingValue == 8 && smsText.length() > 70)) {
+		if ((dataCodingValue == 8 && smsText.length() > 60)) {
 			if (!isPayload) {
 				if (isLongSMS_SAR) {
 					return submitLongSMS_SAR(source, destination, smsText, sequenceNumber)[0];
@@ -97,7 +97,7 @@ public class SMPPClientSMSSender {
 			} else {
 				return submit(source, destination, smsText, sequenceNumber, true);
 			}
-		} else if ((dataCodingValue == 0 && smsText.length() > 160)) {
+		} else if ((dataCodingValue == 0 && smsText.length() > 150)) {
 			if (!isPayload) {
 				if (isLongSMS_SAR) {
 					return submitLongSMS_SAR(source, destination, smsText, sequenceNumber)[0];
@@ -176,7 +176,7 @@ public class SMPPClientSMSSender {
 			splitSize = 153;
 		}
 		byte totalSegments = 0;
-		if ((dataCodingValue == 8 && smsText.length() <= 70) || (dataCodingValue == 0 && smsText.length() <= 160)) {
+		if ((dataCodingValue == 8 && smsText.length() <= 60) || (dataCodingValue == 0 && smsText.length() <= 150)) {
 			msgId = new String[1];
 			msgId[0] = submit(source, destination, smsText, sequenceNumber, false);
 			return msgId;
@@ -248,10 +248,10 @@ public class SMPPClientSMSSender {
 		byte[] textBytes = null;
 		int splitSize = 0;
 		if (dataCodingValue == 8) {
-			splitSize = 67;
+			splitSize = 60;
 			textBytes = CharsetUtil.encode(smsText, CharsetUtil.CHARSET_UCS_2);
 		} else if (dataCodingValue == 0) {
-			splitSize = 153;
+			splitSize = 130;
 			textBytes = CharsetUtil.encode(smsText, CharsetUtil.CHARSET_GSM);
 		}
 
