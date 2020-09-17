@@ -37,7 +37,7 @@ public class SMPPClientSMSSender {
 	private static byte generalDataCodingUCS2Flash = (byte) 0x18;
 
 	private static long timeout = SmppConstants.DEFAULT_CONNECT_TIMEOUT;
-	private static Boolean isPayload = true;
+	private static Boolean isPayload = false;
 	private static Boolean isLongSMS_SAR = false;
 
 	private static ThroughputController tpsController = null;

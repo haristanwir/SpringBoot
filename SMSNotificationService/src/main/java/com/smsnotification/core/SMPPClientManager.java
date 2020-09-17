@@ -36,7 +36,7 @@ public class SMPPClientManager {
 	}
 
 	public synchronized int getSequenceNumber() {
-		sequenceNumber = (sequenceNumber + 1) % Integer.MAX_VALUE;
+		sequenceNumber = (sequenceNumber % Integer.MAX_VALUE) + 1;
 		return sequenceNumber.intValue();
 	}
 
