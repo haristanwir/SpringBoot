@@ -8,6 +8,7 @@ import javax.annotation.PreDestroy;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.cloudhopper.commons.charset.GSMCharset;
 import com.cloudhopper.smpp.impl.DefaultSmppSession;
 import com.smsnotification.core.SMPPClientManager;
 import com.smsnotification.core.SMPPClientSMSSender;
@@ -27,9 +28,9 @@ public class SMSNotificationService {
 		String transactionID = smsRequest.getTransactionID();
 		String sourceSystem = smsRequest.getSourceSystem();
 		String senderTitle = smsRequest.getSenderTitle();
-		Boolean unicodeFlag = smsRequest.getUnicodeFlag();
-		Boolean flashMsgFlag = smsRequest.getFlashMsgFlag();
 		String smsText = smsRequest.getSmsText();
+		Boolean unicodeFlag = !GSMCharset.canRepresent(smsText);
+		Boolean flashMsgFlag = smsRequest.getFlashMsgFlag();
 
 		String appConnectUUID = UUID.randomUUID().toString();
 

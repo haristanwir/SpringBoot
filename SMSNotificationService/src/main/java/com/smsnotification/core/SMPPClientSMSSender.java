@@ -285,7 +285,7 @@ public class SMPPClientSMSSender {
 				tpsController.evaluateTPS();
 				session.sendRequestPdu(request, timeout, false);
 				msgId[i] = "ASYNC_REQ";
-				logger.info("SUBMIT_SM|MULTI_PART_UDH|seqNumber:" + sequenceNumber + "|msgid:" + msgId[i]);
+				logger.debug("SUBMIT_SM|MULTI_PART_UDH|seqNumber:" + sequenceNumber + "|msgid:" + msgId[i]);
 			} catch (Exception ex) {
 				Errorlogger.error("SUBMIT_SM|MULTI_PART_UDH|submitLongSMS_UDH internal exception|" + ex);
 				Errorlogger.error(ErrorHandling.getCustomStackTrace(ex, ex.getMessage()));
