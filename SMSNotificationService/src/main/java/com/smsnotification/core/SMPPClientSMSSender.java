@@ -124,14 +124,14 @@ public class SMPPClientSMSSender {
 			if (generalDataCoding == generalDataCodingUCS2 || generalDataCoding == generalDataCodingUCS2Flash) {
 				byte[] textBytes = CharsetUtil.encode(smsText, CharsetUtil.CHARSET_UCS_2);
 				if (isPayload) {
-					Log_Prefix = "SUBMIT_SM|UTF8 ENCODING|PAYLOAD|";
+					Log_Prefix = "SUBMIT_SM|UCS2 ENCODING|PAYLOAD|";
 					request.setShortMessage((new byte[0]));
 					request.setOptionalParameter(new Tlv(SmppConstants.TAG_MESSAGE_PAYLOAD, textBytes));
 				} else {
-					Log_Prefix = "SUBMIT_SM|UTF8 ENCODING|NORMAL|";
+					Log_Prefix = "SUBMIT_SM|UCS2 ENCODING|NORMAL|";
 					request.setShortMessage(textBytes);
 				}
-				logger.debug("UTF8 Message|sequenceNumber:" + sequenceNumber);
+				logger.debug("UCS2 Message|sequenceNumber:" + sequenceNumber);
 			} else {
 				byte[] textBytes = CharsetUtil.encode(smsText, CharsetUtil.CHARSET_GSM);
 				if (isPayload) {
@@ -207,7 +207,7 @@ public class SMPPClientSMSSender {
 				if (generalDataCoding == generalDataCodingUCS2 || generalDataCoding == generalDataCodingUCS2Flash) {
 					byte[] textBytes = CharsetUtil.encode(segmentData[i], CharsetUtil.CHARSET_UCS_2);
 					request.setShortMessage(textBytes);
-					logger.debug("UTF8 Message|sequenceNumber:" + sequenceNumber);
+					logger.debug("UCS2 Message|sequenceNumber:" + sequenceNumber);
 				} else {
 					byte[] textBytes = CharsetUtil.encode(segmentData[i], CharsetUtil.CHARSET_GSM);
 					request.setShortMessage(textBytes);
@@ -221,7 +221,7 @@ public class SMPPClientSMSSender {
 				if (priorityFlag) {
 					request.setPriority((byte) 0x01);
 				}
-				request.setRegisteredDelivery(deliveryReceipt);
+				// request.setRegisteredDelivery(deliveryReceipt);
 				request.setDataCoding(generalDataCoding);
 				request.setDefaultMsgId(defaultMsgId);
 
@@ -230,6 +230,7 @@ public class SMPPClientSMSSender {
 				request.setOptionalParameter(new Tlv(SmppConstants.TAG_SAR_SEGMENT_SEQNUM, new byte[] { seqNum }));
 
 				if (i == 0) {
+					request.setRegisteredDelivery(deliveryReceipt);
 					request.setSequenceNumber(sequenceNumber);
 				}
 				tpsController.evaluateTPS();
@@ -277,9 +278,10 @@ public class SMPPClientSMSSender {
 				if (priorityFlag) {
 					request.setPriority((byte) 0x01);
 				}
-				request.setRegisteredDelivery(deliveryReceipt);
+				// request.setRegisteredDelivery(deliveryReceipt);
 				request.setDataCoding(generalDataCoding);
 				if (i == 0) {
+					request.setRegisteredDelivery(deliveryReceipt);
 					request.setSequenceNumber(sequenceNumber);
 				}
 				tpsController.evaluateTPS();
