@@ -48,7 +48,7 @@ public class EmployeeTimerFlowService {
 			}
 			scheduler = Executors.newSingleThreadScheduledExecutor();
 			EmployeeTimerWorker timerThread = new EmployeeTimerWorker(timerID, QUEUE_NAME);
-			scheduler.scheduleAtFixedRate(timerThread, 0, timeoutSec, TimeUnit.SECONDS);
+			scheduler.scheduleWithFixedDelay(timerThread, 0, timeoutSec, TimeUnit.SECONDS);
 			isInitialized = true;
 		}
 	}

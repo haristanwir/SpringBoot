@@ -6,6 +6,9 @@
 package com.smsnotification.core;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +29,7 @@ public class SMPPClientManager {
 	private boolean initialized = false;
 	private Integer sequenceNumber = 0;
 	private ArrayList<DefaultSmppSession> sessions = new ArrayList<>();
+	private ScheduledExecutorService schedulerService = Executors.newSingleThreadScheduledExecutor();
 
 	public static SMPPClientManager getManager() {
 		return manager;
@@ -53,12 +57,12 @@ public class SMPPClientManager {
 			}
 		}
 		initialized = true;
-		new Thread() {
+		schedulerService.scheduleWithFixedDelay(new Runnable() {
 			public void run() {
 				while (initialized) {
+					ArrayList<DefaultSmppSession> faulty_sessions = new ArrayList<>();
 					try {
 						synchronized (sessions) {
-							ArrayList<DefaultSmppSession> faulty_sessions = new ArrayList<>();
 							for (DefaultSmppSession session : sessions) {
 								if (!(session != null && session.isBound())) {
 									faulty_sessions.add(session);
@@ -69,13 +73,14 @@ public class SMPPClientManager {
 								sessions.add(new SMPPClientSession().getSession());
 							}
 						}
-						Thread.sleep(Long.parseLong(Utility.getProperty(Constant.SMPP_CLIENT_ENQUIRELINK_TIMEOUT)) / 2);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
+					faulty_sessions.clear();
+					faulty_sessions = null;
 				}
 			}
-		}.start();
+		}, 0, Long.parseLong(Utility.getProperty(Constant.SMPP_CLIENT_ENQUIRELINK_TIMEOUT)) / 2, TimeUnit.MILLISECONDS);
 	}
 
 	public DefaultSmppSession getSession() {
@@ -131,5 +136,6 @@ public class SMPPClientManager {
 			sessions.clear();
 		}
 		initialized = false;
+		schedulerService.shutdown();
 	}
 }
