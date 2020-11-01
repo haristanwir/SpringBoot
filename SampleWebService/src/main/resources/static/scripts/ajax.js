@@ -39,6 +39,31 @@ function getFlowState(servletUrl) {
     });
 }
 
+function getParameters(servletUrl) {
+    $.ajax({
+        url: servletUrl + '/' + "getParameters",
+        success: function (data) {
+            $("#threads-label-" + servletUrl).html(data.threads);
+            $("#tps-label-" + servletUrl).html(data.tps);
+            setTimeout(function () {
+                getParameters(servletUrl);
+            }, 5000);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (textStatus == "timeout") {
+                console.log("getParameters -> Request timeout, Server -> " + servletUrl + ", Detail -> " + errorThrown);
+            } else {
+                console.log("getParameters -> server not responding, Server -> " + servletUrl + ", Detail -> " + errorThrown);
+            }
+            $("#threads-label-" + servletUrl).html('');
+            $("#tps-label-" + servletUrl).html('');
+            setTimeout(function () {
+                getParameters(servletUrl);
+            }, 5000);
+        }
+    });
+}
+
 function startFlow(servletUrl) {
     $("#start-button-" + servletUrl).prop('disabled', 'disabled');
     $.ajax({
@@ -90,6 +115,24 @@ function reloadFlow(servletUrl) {
                 console.log("reloadFlow -> server not responding, Server -> " + servletUrl + ", Detail -> " + errorThrown);
             }
             $("#reload-button-" + servletUrl).prop('disabled', false);
+        }
+    });
+}
+
+function setParameters(servletUrl) {
+    $("#update-button-" + servletUrl).prop('disabled', 'disabled');
+    $.ajax({
+        url: servletUrl + '/' + "setParameters" + "/" + $('#threads-value-'+servletUrl).val() + "/" + $('#tps-value-'+servletUrl).val(),
+        success: function (data) {
+            $("#update-button-" + servletUrl).prop('disabled', false);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if (textStatus == "timeout") {
+                console.log("setParameters -> Request timeout, Server -> " + servletUrl + ", Detail -> " + errorThrown);
+            } else {
+                console.log("setParameters -> server not responding, Server -> " + servletUrl + ", Detail -> " + errorThrown);
+            }
+            $("#update-button-" + servletUrl).prop('disabled', false);
         }
     });
 }

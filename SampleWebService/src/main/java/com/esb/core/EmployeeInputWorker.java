@@ -54,8 +54,10 @@ public class EmployeeInputWorker extends Thread {
 
 		// mqConsumerPool = new ActiveMQConsConnectionPool("localhost", 61616);
 		// mqProducerPool = new ActiveMQProdConnectionPool("localhost", 61616);
-		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR", "SYSTEM.ADMIN.SVRCONN");
-		// mqConsumerPool = new IBMMQConsConnectionPool("localhost", 1415, "IIB10QMGR", "SYSTEM.ADMIN.SVRCONN");
+		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR",
+		// "SYSTEM.ADMIN.SVRCONN");
+		// mqConsumerPool = new IBMMQConsConnectionPool("localhost", 1415, "IIB10QMGR",
+		// "SYSTEM.ADMIN.SVRCONN");
 	}
 
 	public EmployeeInputWorker(String queue, String backoutQueue) {

@@ -27,7 +27,8 @@ public class EmployeeTimerWorker extends Thread {
 		}
 		mqProducerPool = new RabbitMQProdConnectionPool(mq_ip, mq_port, EmployeeTimerWorker.class.getName());
 		// mqProducerPool = new ActiveMQProdConnectionPool("localhost", 61616);
-		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR", "SYSTEM.ADMIN.SVRCONN");
+		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR",
+		// "SYSTEM.ADMIN.SVRCONN");
 	}
 
 	public EmployeeTimerWorker(String timerID, String queue) {
@@ -54,7 +55,8 @@ public class EmployeeTimerWorker extends Thread {
 			long start = System.currentTimeMillis();
 			logger.info("Timer recieved timerID: " + timerID + ", queue:" + queue + ", message:" + message);
 			EmployeeTimerWorker.mqProducerPool.enqueue(message, queue, prop);
-			// EmployeeTimerWorker.mqProducerPool.enqueue(message, queue, (int)(System.currentTimeMillis()%3));
+			// EmployeeTimerWorker.mqProducerPool.enqueue(message, queue,
+			// (int)(System.currentTimeMillis()%3));
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 			Errorlogger.error(ErrorHandling.getStackTrace(ex));

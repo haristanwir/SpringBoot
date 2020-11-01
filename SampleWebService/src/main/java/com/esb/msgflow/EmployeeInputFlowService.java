@@ -25,9 +25,26 @@ public class EmployeeInputFlowService {
 	private String QUEUE_NAME = "EMPLOYEE";
 	private String QUEUE_NAME_BOQ = QUEUE_NAME + ".BOQ";
 	private Integer threadPoolSize = 1;
+	private Integer threadPoolTPS = 1;
 	private ExecutorService execService = null;
 	private Boolean isInitialized = false;
 	private Boolean startOnDeploy = false;
+
+	public Integer getThreadPoolSize() {
+		return threadPoolSize;
+	}
+
+	public synchronized void setThreadPoolSize(Integer threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
+	}
+
+	public Integer getThreadPoolTPS() {
+		return threadPoolTPS;
+	}
+
+	public synchronized void setThreadPoolTPS(Integer threadPoolTPS) {
+		this.threadPoolTPS = threadPoolTPS;
+	}
 
 	public Boolean getIsInitialized() {
 		return isInitialized;
@@ -40,8 +57,16 @@ public class EmployeeInputFlowService {
 	public synchronized void initialize() {
 		if (!isInitialized) {
 			try {
-				EmployeeInputWorker.init(Integer.parseInt(Utility.getProperty(Constant.EmployeeInputFlow_FLOW_TPS)), Utility.getProperty(Constant.JDBC_DRIVER), Utility.getProperty(Constant.JDBC_STRING), Utility.getProperty(Constant.JDBC_USER_NAME), Utility.getProperty(Constant.JDBC_PASSWORD), Utility.getProperty(Constant.RABBITMQ_HOST_NAME), Integer.parseInt(Utility.getProperty(Constant.RABBITMQ_PORT)));
-				threadPoolSize = Integer.parseInt(Utility.getProperty(Constant.EmployeeInputFlow_POOL_SIZE));//
+				EmployeeInputWorker.init(threadPoolTPS, Utility.getProperty(Constant.JDBC_DRIVER), Utility.getProperty(Constant.JDBC_STRING), Utility.getProperty(Constant.JDBC_USER_NAME), Utility.getProperty(Constant.JDBC_PASSWORD), Utility.getProperty(Constant.RABBITMQ_HOST_NAME), Integer.parseInt(Utility.getProperty(Constant.RABBITMQ_PORT)));
+				// EmployeeInputWorker.init(Integer.parseInt(Utility.getProperty(Constant.EmployeeInputFlow_FLOW_TPS)),
+				// Utility.getProperty(Constant.JDBC_DRIVER),
+				// Utility.getProperty(Constant.JDBC_STRING),
+				// Utility.getProperty(Constant.JDBC_USER_NAME),
+				// Utility.getProperty(Constant.JDBC_PASSWORD),
+				// Utility.getProperty(Constant.RABBITMQ_HOST_NAME),
+				// Integer.parseInt(Utility.getProperty(Constant.RABBITMQ_PORT)));
+				// threadPoolSize =
+				// Integer.parseInt(Utility.getProperty(Constant.EmployeeInputFlow_POOL_SIZE));//
 			} catch (Exception ex) {
 				logger.error(ex.getMessage());
 				Errorlogger.error(ErrorHandling.getStackTrace(ex));

@@ -8,7 +8,7 @@
 table {
 	border: 1px solid black;
 	text-align: left;
-	width: 500px;
+	width: 700px;
 }
 
 table td {
@@ -27,6 +27,7 @@ table td {
 		$.each(servlets, function(i, servlet) {
 			setTimeout(function() {
 				getFlowState(servlet);
+				getParameters(servlet);
 			}, 1000);
 		});
 	});
@@ -41,6 +42,9 @@ table td {
 			});
 			$("#reload-button-" + servlet).click(function() {
 				reloadFlow(servlet);
+			});
+			$("#update-button-" + servlet).click(function() {
+				setParameters(servlet);
 			});
 		});
 	});
@@ -62,6 +66,9 @@ table td {
 				th:id="'stop-button-' + ${servlet}" type="button" value="Stop"
 				disabled="disabled" /> <input th:id="'reload-button-' + ${servlet}"
 				type="button" value="Reload" /></td>
+			<td>Threads: <span th:id="'threads-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'threads-value-'+ ${servlet}" type="number" value="1" min="1" max="256" /></td>
+			<td>TPS: <span th:id="'tps-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'tps-value-'+ ${servlet}" type="number" value="1" min="1" /></td>
+			<td><input th:id="'update-button-'+ ${servlet}" type="button" value="Update" /></td>
 		</tr>
 	</table>
 </body>
