@@ -46,6 +46,17 @@ public class SMSNotificationService {
 		}
 		Boolean submitSMSent = false;
 		DefaultSmppSession smppClientSession = smppClientManager.getSession();
+
+		long loopTime = System.currentTimeMillis() + 5000;
+		while (!(smppClientSession != null && smppClientSession.isBound()) && (System.currentTimeMillis() < loopTime)) {
+			try {
+				Thread.sleep(10L);
+			} catch (Exception ex) {
+				Errorlogger.error(ErrorHandling.getStackTrace(ex));
+			}
+			smppClientSession = smppClientManager.getSession();
+		}
+
 		if (smppClientSession != null && smppClientSession.isBound()) {
 			try {
 				int sequenceNumber = smppClientManager.getSequenceNumber();
