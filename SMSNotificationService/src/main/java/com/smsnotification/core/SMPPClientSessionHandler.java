@@ -5,6 +5,7 @@
  */
 package com.smsnotification.core;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTimeZone;
 
@@ -19,7 +20,6 @@ import com.cloudhopper.smpp.pdu.SubmitSmResp;
 import com.cloudhopper.smpp.tlv.Tlv;
 import com.cloudhopper.smpp.util.DeliveryReceipt;
 import com.smsnotification.utility.ErrorHandling;
-import com.smsnotification.utility.SMSLogger;
 
 /**
  *
@@ -27,8 +27,8 @@ import com.smsnotification.utility.SMSLogger;
  */
 public class SMPPClientSessionHandler extends DefaultSmppSessionHandler {
 
-	private static final Logger logger = SMSLogger.getLogger(SMPPClientSessionHandler.class.getName());
-	private static final Logger Errorlogger = SMSLogger.getLogger(ErrorHandling.class.getName());
+	private static final Logger logger = LogManager.getLogger(SMPPClientSessionHandler.class.getName());
+	private static final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	public SMPPClientSessionHandler() {
 	}

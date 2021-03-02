@@ -10,11 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cloudhopper.smpp.impl.DefaultSmppSession;
 import com.smsnotification.utility.Constant;
-import com.smsnotification.utility.SMSLogger;
 import com.smsnotification.utility.Utility;
 
 /**
@@ -23,7 +23,7 @@ import com.smsnotification.utility.Utility;
  */
 public class SMPPClientManager {
 
-	private static final Logger logger = SMSLogger.getLogger(SMPPClientManager.class.getName());
+	private static final Logger logger = LogManager.getLogger(SMPPClientManager.class.getName());
 	private static SMPPClientManager manager = new SMPPClientManager();
 	private Integer maxSession = Integer.parseInt(Utility.getProperty(Constant.SMPP_CLIENT_MAX_SESSIONS));
 	private boolean initialized = false;

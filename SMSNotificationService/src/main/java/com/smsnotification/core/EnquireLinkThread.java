@@ -7,6 +7,7 @@ package com.smsnotification.core;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cloudhopper.smpp.SmppSession;
@@ -16,7 +17,6 @@ import com.cloudhopper.smpp.type.RecoverablePduException;
 import com.cloudhopper.smpp.type.SmppChannelException;
 import com.cloudhopper.smpp.type.SmppTimeoutException;
 import com.cloudhopper.smpp.type.UnrecoverablePduException;
-import com.smsnotification.utility.SMSLogger;
 
 /**
  *
@@ -24,7 +24,7 @@ import com.smsnotification.utility.SMSLogger;
  */
 public class EnquireLinkThread extends Thread {
 
-	private static final Logger logger = SMSLogger.getLogger(EnquireLinkThread.class.getName());
+	private static final Logger logger = LogManager.getLogger(EnquireLinkThread.class.getName());
 	private final AtomicBoolean sendingEnquireLink = new AtomicBoolean(true);
 	private SmppSession session = null;
 	private Long timeout = null;

@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,12 @@ import com.smsnotification.core.SMPPClientSMSSender;
 import com.smsnotification.model.SMSRequest;
 import com.smsnotification.model.SMSResponse;
 import com.smsnotification.utility.ErrorHandling;
-import com.smsnotification.utility.SMSLogger;
 
 @Service
 public class SMSNotificationService {
 
-	private static final Logger logger = SMSLogger.getLogger(SMSNotificationService.class.getName());
-	private static final Logger Errorlogger = SMSLogger.getLogger(ErrorHandling.class.getName());
+	private static final Logger logger = LogManager.getLogger(SMSNotificationService.class.getName());
+	private static final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	public SMSResponse sendSMS(SMSRequest smsRequest) {
 		String msisdn = smsRequest.getMsisdn();

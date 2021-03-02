@@ -7,6 +7,7 @@ package com.smsnotification.core;
 
 import java.util.concurrent.Executors;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cloudhopper.smpp.SmppBindType;
@@ -17,7 +18,6 @@ import com.cloudhopper.smpp.impl.DefaultSmppSession;
 import com.cloudhopper.smpp.type.Address;
 import com.smsnotification.utility.Constant;
 import com.smsnotification.utility.ErrorHandling;
-import com.smsnotification.utility.SMSLogger;
 import com.smsnotification.utility.Utility;
 
 /**
@@ -26,8 +26,8 @@ import com.smsnotification.utility.Utility;
  */
 public class SMPPClientSession {
 
-	private static final Logger logger = SMSLogger.getLogger(SMPPClientSession.class.getName());
-	private static final Logger Errorlogger = SMSLogger.getLogger(ErrorHandling.class.getName());
+	private static final Logger logger = LogManager.getLogger(SMPPClientSession.class.getName());
+	private static final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private SmppSessionConfiguration configuration = null;
 	private DefaultSmppClient smppClient = null;

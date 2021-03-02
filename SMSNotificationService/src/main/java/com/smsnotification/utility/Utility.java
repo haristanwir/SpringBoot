@@ -1,22 +1,24 @@
 package com.smsnotification.utility;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cloudhopper.smpp.SmppConstants;
 
 public class Utility {
 
-	private static final Logger logger = SMSLogger.getLogger(Utility.class.getName());
+	private static final Logger logger = LogManager.getLogger(Utility.class.getName());
 	public static Properties properties = null;
 
 	private synchronized static void loadProperties() throws Exception {
 		properties = new Properties();
 		try {
-			properties.load(new FileInputStream(Constant.USER_DIR + Constant.APP_ROOT_DIR + File.separator + Constant.APP_DIR + File.separator + Constant.CONFIG_DIR + File.separator + Constant.CONFIG_FILE_NAME));
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			InputStream inputStream = classLoader.getResourceAsStream(Constant.CONFIG_FILE_NAME);
+			properties.load(inputStream);
 		} catch (Exception e) {
 			logger.error("Prop: loading failed", e);
 			throw e;

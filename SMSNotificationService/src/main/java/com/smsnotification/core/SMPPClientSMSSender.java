@@ -2,6 +2,7 @@ package com.smsnotification.core;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.cloudhopper.commons.charset.CharsetUtil;
@@ -12,7 +13,6 @@ import com.cloudhopper.smpp.tlv.Tlv;
 import com.cloudhopper.smpp.type.Address;
 import com.smsnotification.utility.Constant;
 import com.smsnotification.utility.ErrorHandling;
-import com.smsnotification.utility.SMSLogger;
 import com.smsnotification.utility.Utility;
 
 /**
@@ -21,8 +21,8 @@ import com.smsnotification.utility.Utility;
  */
 public class SMPPClientSMSSender {
 
-	private static final Logger logger = SMSLogger.getLogger(SMPPClientSMSSender.class.getName());
-	private static final Logger Errorlogger = SMSLogger.getLogger(ErrorHandling.class.getName());
+	private static final Logger logger = LogManager.getLogger(SMPPClientSMSSender.class.getName());
+	private static final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private static byte deliveryReceipt = SmppConstants.REGISTERED_DELIVERY_SMSC_RECEIPT_NOT_REQUESTED;
 
