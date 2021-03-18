@@ -59,10 +59,40 @@ public class SMPPClientManager {
 		initialized = true;
 		schedulerService.scheduleWithFixedDelay(new Runnable() {
 			public void run() {
-				while (initialized) {
+				if (initialized) {
 					ArrayList<DefaultSmppSession> faulty_sessions = new ArrayList<>();
 					try {
 						synchronized (sessions) {
+							if (sessions.isEmpty()) {
+								for (int i = 0; i < maxSession; i++) {
+									try {
+										sessions.add(new SMPPClientSession().getSession());
+									} catch (Exception ex) {
+									}
+								}
+							} else if (sessions.size() > maxSession) {
+								for (int i = 0; i < (sessions.size() - maxSession); i++) {
+									try {
+										DefaultSmppSession session = sessions.remove(0);
+										if (session != null) {
+											try {
+												session.unbind(Long.parseLong(Utility.getProperty(Constant.SMPP_CLIENT_BIND_TIMEOUT)));
+											} catch (Exception ex) {
+											}
+											try {
+												session.close();
+											} catch (Exception ex) {
+											}
+											try {
+												session.destroy();
+											} catch (Exception ex) {
+											}
+											session = null;
+										}
+									} catch (Exception ex) {
+									}
+								}
+							}
 							for (DefaultSmppSession session : sessions) {
 								if (!(session != null && session.isBound())) {
 									faulty_sessions.add(session);
@@ -95,9 +125,9 @@ public class SMPPClientManager {
 			}
 		} catch (Exception ex) {
 		}
-		if (session == null) {
-			session = new SMPPClientSession().getSession();
-		}
+//		if (session == null) {
+//			session = new SMPPClientSession().getSession();
+//		}
 		return session;
 	}
 

@@ -15,7 +15,9 @@ import com.smsnotification.core.SMPPClientManager;
 import com.smsnotification.core.SMPPClientSMSSender;
 import com.smsnotification.model.SMSRequest;
 import com.smsnotification.model.SMSResponse;
+import com.smsnotification.utility.Constant;
 import com.smsnotification.utility.ErrorHandling;
+import com.smsnotification.utility.Utility;
 
 @Service
 public class SMSNotificationService {
@@ -47,10 +49,10 @@ public class SMSNotificationService {
 		Boolean submitSMSent = false;
 		DefaultSmppSession smppClientSession = smppClientManager.getSession();
 
-		long loopTime = System.currentTimeMillis() + 5000;
+		long loopTime = System.currentTimeMillis() + (Long.parseLong(Utility.getProperty(Constant.SMPP_CLIENT_ENQUIRELINK_TIMEOUT)) / 2);
 		while (!(smppClientSession != null && smppClientSession.isBound()) && (System.currentTimeMillis() < loopTime)) {
 			try {
-				Thread.sleep(10L);
+				Thread.sleep(500L);
 			} catch (Exception ex) {
 				Errorlogger.error(ErrorHandling.getStackTrace(ex));
 			}
