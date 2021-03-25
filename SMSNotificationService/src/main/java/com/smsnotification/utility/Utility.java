@@ -1,6 +1,7 @@
 package com.smsnotification.utility;
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,8 +17,7 @@ public class Utility {
 	private synchronized static void loadProperties() throws Exception {
 		properties = new Properties();
 		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			InputStream inputStream = classLoader.getResourceAsStream(Constant.CONFIG_FILE_NAME);
+			FileInputStream inputStream = new FileInputStream(Constant.APP_ROOT_DIR + File.separator + Constant.APP_DIR + File.separator + Constant.CONFIG_DIR + File.separator + Constant.CONFIG_FILE_NAME);
 			properties.load(inputStream);
 		} catch (Exception e) {
 			logger.error("Prop: loading failed", e);

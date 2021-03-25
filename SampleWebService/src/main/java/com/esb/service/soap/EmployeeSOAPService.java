@@ -10,12 +10,12 @@ import javax.xml.bind.Marshaller;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.esb.soap.springboot.employeews.EmployeeReqType;
-import com.esb.soap.springboot.employeews.EmployeeRespType;
-import com.esb.soap.springboot.employeews.GetEmployeeRequest;
-import com.esb.soap.springboot.employeews.GetEmployeeResponse;
-import com.esb.soap.springboot.employeews.SetEmployeeRequest;
-import com.esb.soap.springboot.employeews.SetEmployeeResponse;
+import com.esb.soap.soap.employeews.EmployeeReqType;
+import com.esb.soap.soap.employeews.EmployeeRespType;
+import com.esb.soap.soap.employeews.GetEmployeeRequest;
+import com.esb.soap.soap.employeews.GetEmployeeResponse;
+import com.esb.soap.soap.employeews.SetEmployeeRequest;
+import com.esb.soap.soap.employeews.SetEmployeeResponse;
 import com.esb.utility.Constant;
 import com.esb.utility.ErrorHandling;
 import com.esb.utility.FlowLogger;
@@ -39,7 +39,8 @@ public class EmployeeSOAPService {
 		}
 		mqProducerPool = new RabbitMQProdConnectionPool(mq_ip, mq_port, EmployeeSOAPService.class.getName());
 		// mqProducerPool = new ActiveMQProdConnectionPool("localhost", 61616);
-		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR", "SYSTEM.ADMIN.SVRCONN");
+		// mqProducerPool = new IBMMQProdConnectionPool("localhost", 1415, "IIB10QMGR",
+		// "SYSTEM.ADMIN.SVRCONN");
 	}
 
 	public SetEmployeeResponse setEmployee(SetEmployeeRequest setEmpReq) {

@@ -24,7 +24,7 @@ public class FlowLogger {
 			standardPattern.addAttribute("pattern", "%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n");
 			console.add(standardPattern);
 			builder.add(console);
-			RootLoggerComponentBuilder asynclogger = asynclogger = builder.newAsyncRootLogger(Level.DEBUG);
+			RootLoggerComponentBuilder asynclogger = builder.newAsyncRootLogger(Level.DEBUG);
 
 //			
 //			try {

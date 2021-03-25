@@ -3,6 +3,9 @@ package com.smsnotification.utility;
 public class Constant {
 	public static final Boolean isProd = false;
 	
+	public static final String APP_ROOT_DIR = "/app";
+	public static final String APP_DIR = "sms_service";
+	public static final String CONFIG_DIR = "config";
 	public static final String CONFIG_FILE_NAME = "app.properties";
 	
 	public static final String SMPP_SERVER_HOST = "smpp.server.host";

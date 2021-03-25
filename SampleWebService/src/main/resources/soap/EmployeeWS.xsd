@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
-	targetNamespace="http://soap.esb.com/springboot/EmployeeWS"
+	targetNamespace="http://soap.esb.com/soap/EmployeeWS"
 	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:tns="http://soap.esb.com/springboot/EmployeeWS">
+	xmlns:tns="http://soap.esb.com/soap/EmployeeWS">
 
 	<element name="SetEmployeeRequest">
 		<complexType>

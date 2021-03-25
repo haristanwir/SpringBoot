@@ -25,14 +25,14 @@ public class SoapWebServiceConfiguration extends WsConfigurerAdapter {
 		MessageDispatcherServlet messageDispatcherServlet = new MessageDispatcherServlet();
 		messageDispatcherServlet.setApplicationContext(applicationContext);
 		messageDispatcherServlet.setTransformWsdlLocations(true);
-		return new ServletRegistrationBean<>(messageDispatcherServlet, "/springboot/EmployeeWS/Interface/*");
+		return new ServletRegistrationBean<>(messageDispatcherServlet, "/soap/EmployeeWS/Interface/*");
 	}
 
 	@Bean(name = "EmployeeWS")
 	public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema employeeWSSchema) {
 		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
 		wsdl11Definition.setPortTypeName("EmployeeWS");
-		wsdl11Definition.setLocationUri("/springboot/EmployeeWS/Interface/");
+		wsdl11Definition.setLocationUri("/soap/EmployeeWS/Interface/");
 		wsdl11Definition.setTargetNamespace(employeeWSSchema.getTargetNamespace() + "/Interface");
 		wsdl11Definition.setSchema(employeeWSSchema);
 		return wsdl11Definition;
