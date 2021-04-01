@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:sch="http://soap.esb.com/soap/EmployeeWS"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://soap.esb.com/soap/EmployeeWS/Interface"
+	targetNamespace="http://soap.esb.com/soap/EmployeeWS/Interface">
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema"
+			xmlns:tns="http://soap.esb.com/soap/EmployeeWS"
+			elementFormDefault="qualified"
+			targetNamespace="http://soap.esb.com/soap/EmployeeWS">
+
+			<element name="SetEmployeeRequest">
+				<complexType>
+					<sequence>
+						<element maxOccurs="1" minOccurs="1" name="Request"
+							type="tns:EmployeeReq_Type" />
+					</sequence>
+				</complexType>
+			</element>
+
+			<element name="SetEmployeeResponse">
+				<complexType>
+					<sequence>
+						<element maxOccurs="1" minOccurs="1" name="Response"
+							type="tns:EmployeeResp_Type" />
+					</sequence>
+				</complexType>
+			</element>
+
+			<complexType name="EmployeeReq_Type">
+				<sequence>
+					<element maxOccurs="1" minOccurs="1" name="ID"
+						type="string" />
+					<element maxOccurs="1" minOccurs="1" name="Name"
+						type="string" />
+				</sequence>
+			</complexType>
+
+			<complexType name="EmployeeResp_Type">
+				<sequence>
+					<element maxOccurs="1" minOccurs="1" name="ResultCode"
+						type="string" />
+					<element maxOccurs="1" minOccurs="1" name="ResultDesc"
+						type="string" />
+				</sequence>
+			</complexType>
+
+			<element name="GetEmployeeRequest">
+				<complexType>
+					<sequence>
+						<element name="Request">
+							<complexType>
+								<sequence>
+									<element maxOccurs="1" minOccurs="1" name="ID"
+										type="string">
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+
+			<element name="GetEmployeeResponse">
+				<complexType>
+					<sequence>
+						<element maxOccurs="1" minOccurs="1" name="Response"
+							type="tns:EmployeeReq_Type" />
+					</sequence>
+				</complexType>
+			</element>
+
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="SetEmployeeResponse">
+		<wsdl:part element="sch:SetEmployeeResponse"
+			name="SetEmployeeResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="GetEmployeeResponse">
+		<wsdl:part element="sch:GetEmployeeResponse"
+			name="GetEmployeeResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="GetEmployeeRequest">
+		<wsdl:part element="sch:GetEmployeeRequest"
+			name="GetEmployeeRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="SetEmployeeRequest">
+		<wsdl:part element="sch:SetEmployeeRequest"
+			name="SetEmployeeRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="EmployeeWS">
+		<wsdl:operation name="SetEmployee">
+			<wsdl:input message="tns:SetEmployeeRequest"
+				name="SetEmployeeRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:SetEmployeeResponse"
+				name="SetEmployeeResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEmployee">
+			<wsdl:input message="tns:GetEmployeeRequest"
+				name="GetEmployeeRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:GetEmployeeResponse"
+				name="GetEmployeeResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="EmployeeWSSoap11"
+		type="tns:EmployeeWS">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="SetEmployee">
+			<soap:operation soapAction="" />
+			<wsdl:input name="SetEmployeeRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="SetEmployeeResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEmployee">
+			<soap:operation soapAction="" />
+			<wsdl:input name="GetEmployeeRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="GetEmployeeResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="EmployeeWSService">
+		<wsdl:port binding="tns:EmployeeWSSoap11"
+			name="EmployeeWSSoap11">
+			<soap:address
+				location="http://localhost:9090/soap/EmployeeWS/Interface/" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
