@@ -30,6 +30,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
 		</dependency>
 		<dependency>
@@ -60,17 +69,32 @@
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>employee</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
+						<configuration>
+							<schemaDirectory>${project.basedir}/src/main/resources/soap/employee</schemaDirectory>
+							<schemaIncludes>
+								<include>*.wsdl</include>
+							</schemaIncludes>
+							<generateDirectory>${project.build.directory}/generated-sources/xjc1/</generateDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>interact</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<schemaDirectory>${project.basedir}/src/main/resources/soap/interact/</schemaDirectory>
+							<schemaIncludes>
+								<include>*.wsdl</include>
+							</schemaIncludes>
+							<generateDirectory>${project.build.directory}/generated-sources/xjc2/</generateDirectory>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<schemaDirectory>${project.basedir}/src/main/resources/soap/</schemaDirectory>
-					<schemaIncludes>
-						<include>*.wsdl</include>
-					</schemaIncludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

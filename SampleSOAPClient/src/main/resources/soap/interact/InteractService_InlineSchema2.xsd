@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.interact.unicacorp.com/xsd" xmlns:ax21="http://api.interact.unicacorp.com/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns="http://soap.api.interact.unicacorp.com" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <xsd:complexType name="NameValuePairImpl">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="name" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="valueAsDate" nillable="true" type="xsd:date"/>
+                    <xsd:element minOccurs="0" name="valueAsNumeric" nillable="true" type="xsd:double"/>
+                    <xsd:element minOccurs="0" name="valueAsString" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="valueDataType" nillable="true" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Response">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="advisoryMessages" nillable="true" type="ax21:AdvisoryMessage"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="allOfferLists" nillable="true" type="ax21:OfferList"/>
+                    <xsd:element minOccurs="0" name="apiVersion" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="offerList" nillable="true" type="ax21:OfferList"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="profileRecord" nillable="true" type="ax21:NameValuePairImpl"/>
+                    <xsd:element minOccurs="0" name="sessionID" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="statusCode" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="AdvisoryMessage">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="detailMessage" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="message" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="messageCode" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="statusLevel" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="OfferList">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="defaultString" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="interactionPointName" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="recommendedOffers" nillable="true" type="ax21:Offer"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Offer">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="additionalAttributes" nillable="true" type="ax21:NameValuePairImpl"/>
+                    <xsd:element minOccurs="0" name="description" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="offerCode" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="offerName" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="score" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="treatmentCode" nillable="true" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="GetOfferRequest">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="duplicationPolicy" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="ipName" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="numberRequested" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="offerAttributes" nillable="true" type="ax21:OfferAttributeRequirements"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="OfferAttributeRequirements">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="ax21:NameValuePairImpl"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="childRequirements" nillable="true" type="ax21:OfferAttributeRequirements"/>
+                    <xsd:element minOccurs="0" name="numberRequested" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="CommandImpl">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="audienceID" nillable="true" type="ax21:NameValuePairImpl"/>
+                    <xsd:element minOccurs="0" name="audienceLevel" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="debug" type="xsd:boolean"/>
+                    <xsd:element minOccurs="0" name="event" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="eventParameters" nillable="true" type="ax21:NameValuePairImpl"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="getOfferRequests" nillable="true" type="ax21:GetOfferRequest"/>
+                    <xsd:element minOccurs="0" name="interactionPoint" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="interactiveChannel" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="methodIdentifier" nillable="true" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="numberRequested" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="relyOnExistingSession" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="BatchResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="batchStatusCode" type="xsd:int"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="responses" nillable="true" type="ax21:Response"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>

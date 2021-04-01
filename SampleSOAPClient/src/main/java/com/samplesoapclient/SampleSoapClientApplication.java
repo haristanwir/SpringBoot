@@ -15,6 +15,8 @@ import com.esb.soap.soap.employeews.GetEmployeeResponse;
 import com.esb.soap.soap.employeews.SetEmployeeRequest;
 import com.esb.soap.soap.employeews.SetEmployeeResponse;
 import com.samplesoapclient.client.SoapClient;
+import com.unicacorp.interact.api.soap.ExecuteBatch;
+import com.unicacorp.interact.api.soap.ExecuteBatchResponse;
 
 @RestController
 @SpringBootApplication
@@ -40,6 +42,13 @@ public class SampleSoapClientApplication {
 		req.setName("faiza");
 		request.setRequest(req);
 		return soapClient.setEmployeeWS(request);
+	}
+	
+	@RequestMapping(path = "/executeBatch", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+	public ExecuteBatchResponse invokeSoapService_executeBatch() {
+		ExecuteBatch request = new ExecuteBatch();
+		request.setSessionID("123122");
+		return soapClient.executeBatch(request);
 	}
 
 	public static void main(String[] args) {
