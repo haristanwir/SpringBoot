@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+
+		<Console name="Console">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+		</Console>
+
+		<RollingFile name="Spring"
+			fileName="/app/sms_service/logs/spring.log"
+			filePattern="/app/sms_service/logs/spring.log.%d{yyyy_MM_dd}"
+			immediateFlush="true" append="true" filePermissions="rwxrwxr-x">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="SMSService"
+			fileName="/app/sms_service/logs/sms_service.log"
+			filePattern="/app/sms_service/logs/sms_service.log.%d{yyyy_MM_dd}"
+			immediateFlush="true" append="true" filePermissions="rwxrwxr-x">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="SMSFlow"
+			fileName="/app/sms_service/logs/sms_flow.log"
+			filePattern="/app/sms_service/logs/sms_flow.log.%d{yyyy_MM_dd}"
+			immediateFlush="true" append="true" filePermissions="rwxrwxr-x">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="Utility"
+			fileName="/app/sms_service/logs/utility.log"
+			filePattern="/app/sms_service/logs/utility.log.%d{yyyy_MM_dd}"
+			immediateFlush="true" append="true" filePermissions="rwxrwxr-x">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="Error"
+			fileName="/app/sms_service/logs/error.log"
+			filePattern="/app/sms_service/logs/error.log.%d{yyyy_MM_dd}"
+			immediateFlush="true" append="true" filePermissions="rwxrwxr-x">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+
+		<asyncRoot level="info" includeLocation="true"
+			additivity="false">
+			<AppenderRef ref="Spring" />
+		</asyncRoot>
+
+		<AsyncLogger name="com.smsnotification.core" level="debug"
+			includeLocation="true" additivity="false">
+			<AppenderRef ref="SMSFlow" />
+		</AsyncLogger>
+
+		<AsyncLogger name="com.smsnotification.service"
+			level="debug" includeLocation="true" additivity="false">
+			<AppenderRef ref="SMSService" />
+		</AsyncLogger>
+
+		<AsyncLogger name="com.smsnotification.utility"
+			level="debug" includeLocation="true" additivity="false">
+			<AppenderRef ref="Utility" />
+		</AsyncLogger>
+
+		<AsyncLogger
+			name="com.smsnotification.utility.ErrorHandling" level="debug"
+			includeLocation="true" additivity="false">
+			<AppenderRef ref="Error" />
+		</AsyncLogger>
+	</Loggers>
+</Configuration>
