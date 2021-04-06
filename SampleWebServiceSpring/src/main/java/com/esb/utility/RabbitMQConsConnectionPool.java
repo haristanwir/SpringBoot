@@ -8,6 +8,9 @@ package com.esb.utility;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rabbitmq.client.Channel;
@@ -21,8 +24,8 @@ import com.rabbitmq.client.GetResponse;
  */
 public class RabbitMQConsConnectionPool {
 
-	private static final Logger logger = FlowLogger.getLogger(RabbitMQConsConnectionPool.class.getName());
-	private static final Logger Errorlogger = FlowLogger.getLogger(ErrorHandling.class.getName());
+	private final Logger logger = LogManager.getLogger(RabbitMQConsConnectionPool.class.getName());
+	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private String ip = null;
 	private Integer port = null;
@@ -135,6 +138,7 @@ public class RabbitMQConsConnectionPool {
 		}
 	}
 
+	@PreDestroy
 	public void shutdown() {
 		synchronized (channelPool) {
 			for (Channel channel : channelPool) {

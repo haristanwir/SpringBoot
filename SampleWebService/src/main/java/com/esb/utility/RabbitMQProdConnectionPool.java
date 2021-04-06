@@ -79,6 +79,9 @@ public class RabbitMQProdConnectionPool {
 					channel = channelPool.remove(0);
 				} else {
 					try {
+						if (connection == null) {
+							connection = factory.newConnection(this.connectionName);
+						}
 						channel = connection.createChannel();
 					} catch (Exception ex) {
 						logger.error(ex.getMessage());
@@ -89,6 +92,9 @@ public class RabbitMQProdConnectionPool {
 		} else {
 			if (poolSize == 0) {
 				try {
+					if (connection == null) {
+						connection = factory.newConnection(this.connectionName);
+					}
 					channel = connection.createChannel();
 				} catch (Exception ex) {
 					logger.error(ex.getMessage());
@@ -106,6 +112,9 @@ public class RabbitMQProdConnectionPool {
 								channel = channelPool.remove(0);
 							} else {
 								try {
+									if (connection == null) {
+										connection = factory.newConnection(this.connectionName);
+									}
 									channel = connection.createChannel();
 								} catch (Exception ex) {
 									logger.error(ex.getMessage());
@@ -176,6 +185,9 @@ public class RabbitMQProdConnectionPool {
 		Channel channel = getChannel();
 		try {
 			while (!isConnected(channel)) {
+				if (connection == null) {
+					connection = factory.newConnection(this.connectionName);
+				}
 				channel = connection.createChannel();
 			}
 			if (channel.isOpen()) {
@@ -200,6 +212,9 @@ public class RabbitMQProdConnectionPool {
 		Channel channel = getChannel();
 		try {
 			while (!isConnected(channel)) {
+				if (connection == null) {
+					connection = factory.newConnection(this.connectionName);
+				}
 				channel = connection.createChannel();
 			}
 			if (channel.isOpen()) {

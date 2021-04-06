@@ -8,21 +8,24 @@ package com.esb.utility;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.GetResponse;
 
 /**
  *
  * @author Haris Tanwir
  */
-public class RabbitMQConsConnectionPool {
+public class RabbitMQProdConnectionPool {
 
-	private static final Logger logger = FlowLogger.getLogger(RabbitMQConsConnectionPool.class.getName());
-	private static final Logger Errorlogger = FlowLogger.getLogger(ErrorHandling.class.getName());
+	private final Logger logger = LogManager.getLogger(RabbitMQProdConnectionPool.class.getName());
+	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private String ip = null;
 	private Integer port = null;
@@ -33,10 +36,10 @@ public class RabbitMQConsConnectionPool {
 	private Connection connection = null;
 	private List<Channel> channelPool = null;
 
-	public RabbitMQConsConnectionPool(String ip, Integer port, String connectionName) {
+	public RabbitMQProdConnectionPool(String ip, Integer port, String connectionName) {
 		this.ip = ip;
 		this.port = port;
-		this.connectionName = connectionName + "(Consumer)";
+		this.connectionName = connectionName + "(Publisher)";
 		this.channelPool = new ArrayList<>();
 		try {
 			factory = new ConnectionFactory();
@@ -49,13 +52,13 @@ public class RabbitMQConsConnectionPool {
 		}
 	}
 
-	public RabbitMQConsConnectionPool(String ip, Integer port, String connectionName, Integer poolSize) {
+	public RabbitMQProdConnectionPool(String ip, Integer port, String connectionName, Integer poolSize) {
 		this.ip = ip;
 		this.port = port;
 		if (poolSize > this.poolSize) {
 			this.poolSize = poolSize;
 		}
-		this.connectionName = connectionName + "(Consumer)";
+		this.connectionName = connectionName + "(Publisher)";
 		this.channelPool = new ArrayList<>();
 		try {
 			factory = new ConnectionFactory();
@@ -135,6 +138,7 @@ public class RabbitMQConsConnectionPool {
 		}
 	}
 
+	@PreDestroy
 	public void shutdown() {
 		synchronized (channelPool) {
 			for (Channel channel : channelPool) {
@@ -181,7 +185,7 @@ public class RabbitMQConsConnectionPool {
 		return connected;
 	}
 
-	public GetResponse dequeue(String queuename) throws Exception {
+	public Boolean enqueue(String message, String queuename, BasicProperties prop) throws Exception {
 		Channel channel = getChannel();
 		try {
 			while (!isConnected(channel)) {
@@ -192,11 +196,11 @@ public class RabbitMQConsConnectionPool {
 			}
 			if (channel.isOpen()) {
 				channel.queueDeclare(queuename, true, false, false, null);
-				GetResponse mqMessage = channel.basicGet(queuename, true);
+				channel.basicPublish("", queuename, prop, message.getBytes("UTF-8"));
 				releaseChannel(channel);
-				return mqMessage;
+				return true;
 			} else {
-				return null;
+				return false;
 			}
 		} catch (Exception ex) {
 			if (poolSize > 0) {
@@ -207,4 +211,31 @@ public class RabbitMQConsConnectionPool {
 			throw ex;
 		}
 	}
+
+	public Boolean publish(String message, String routingKey, String exchange, BasicProperties prop) throws Exception {
+		Channel channel = getChannel();
+		try {
+			while (!isConnected(channel)) {
+				if (connection == null) {
+					connection = factory.newConnection(this.connectionName);
+				}
+				channel = connection.createChannel();
+			}
+			if (channel.isOpen()) {
+				channel.basicPublish(exchange, routingKey, prop, message.getBytes("UTF-8"));
+				releaseChannel(channel);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			if (poolSize > 0) {
+				releaseChannel(channel);
+			} else {
+				shutdown(channel);
+			}
+			throw ex;
+		}
+	}
+
 }
