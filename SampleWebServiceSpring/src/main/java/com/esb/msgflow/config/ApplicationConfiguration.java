@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.esb.msgflow.core.EmployeeMQInput;
 import com.esb.msgflow.core.EmployeeTimer;
+import com.esb.utility.JDBCConnectionPool;
 import com.esb.utility.RabbitMQConsConnectionPool;
 import com.esb.utility.RabbitMQProdConnectionPool;
 
@@ -32,6 +33,11 @@ public class ApplicationConfiguration {
 	@Bean
 	public EmployeeTimer employeeTimer(@Value("${EmployeeTimer.flow.timerid}") String timerID, @Value("${EmployeeTimer.flow.timeout.second}") Integer timeoutSec) {
 		return new EmployeeTimer(timerID, timeoutSec);
+	}
+
+	@Bean
+	public JDBCConnectionPool jdbcPool(@Value("${db.driver.name}") String db_drivername, @Value("${db.connection.string}") String db_url, @Value("${db.username}") String db_user, @Value("${db.password}") String db_password) {
+		return new JDBCConnectionPool(db_drivername, db_url, db_user, db_password);
 	}
 
 }

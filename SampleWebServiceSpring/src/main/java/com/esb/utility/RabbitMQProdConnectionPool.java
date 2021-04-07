@@ -52,27 +52,27 @@ public class RabbitMQProdConnectionPool {
 		}
 	}
 
-	public RabbitMQProdConnectionPool(String ip, Integer port, String connectionName, Integer poolSize) {
-		this.ip = ip;
-		this.port = port;
-		if (poolSize > this.poolSize) {
-			this.poolSize = poolSize;
-		}
-		this.connectionName = connectionName + "(Publisher)";
-		this.channelPool = new ArrayList<>();
-		try {
-			factory = new ConnectionFactory();
-			factory.setHost(ip);
-			factory.setPort(port);
-			connection = factory.newConnection(this.connectionName);
-			for (int i = 0; i < poolSize; i++) {
-				channelPool.add(connection.createChannel());
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			Errorlogger.error(ErrorHandling.getStackTrace(e));
-		}
-	}
+//	public RabbitMQProdConnectionPool(String ip, Integer port, String connectionName, Integer poolSize) {
+//		this.ip = ip;
+//		this.port = port;
+//		if (poolSize > this.poolSize) {
+//			this.poolSize = poolSize;
+//		}
+//		this.connectionName = connectionName + "(Publisher)";
+//		this.channelPool = new ArrayList<>();
+//		try {
+//			factory = new ConnectionFactory();
+//			factory.setHost(ip);
+//			factory.setPort(port);
+//			connection = factory.newConnection(this.connectionName);
+//			for (int i = 0; i < poolSize; i++) {
+//				channelPool.add(connection.createChannel());
+//			}
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//			Errorlogger.error(ErrorHandling.getStackTrace(e));
+//		}
+//	}
 
 	private Channel getChannel() {
 		Channel channel = null;
@@ -83,7 +83,11 @@ public class RabbitMQProdConnectionPool {
 				} else {
 					try {
 						if (connection == null) {
-							connection = factory.newConnection(this.connectionName);
+							synchronized (this) {
+								if (connection == null) {
+									connection = factory.newConnection(this.connectionName);
+								}
+							}
 						}
 						channel = connection.createChannel();
 					} catch (Exception ex) {
@@ -96,7 +100,11 @@ public class RabbitMQProdConnectionPool {
 			if (poolSize == 0) {
 				try {
 					if (connection == null) {
-						connection = factory.newConnection(this.connectionName);
+						synchronized (this) {
+							if (connection == null) {
+								connection = factory.newConnection(this.connectionName);
+							}
+						}
 					}
 					channel = connection.createChannel();
 				} catch (Exception ex) {
@@ -116,7 +124,11 @@ public class RabbitMQProdConnectionPool {
 							} else {
 								try {
 									if (connection == null) {
-										connection = factory.newConnection(this.connectionName);
+										synchronized (this) {
+											if (connection == null) {
+												connection = factory.newConnection(this.connectionName);
+											}
+										}
 									}
 									channel = connection.createChannel();
 								} catch (Exception ex) {
@@ -190,7 +202,11 @@ public class RabbitMQProdConnectionPool {
 		try {
 			while (!isConnected(channel)) {
 				if (connection == null) {
-					connection = factory.newConnection(this.connectionName);
+					synchronized (this) {
+						if (connection == null) {
+							connection = factory.newConnection(this.connectionName);
+						}
+					}
 				}
 				channel = connection.createChannel();
 			}
@@ -217,7 +233,11 @@ public class RabbitMQProdConnectionPool {
 		try {
 			while (!isConnected(channel)) {
 				if (connection == null) {
-					connection = factory.newConnection(this.connectionName);
+					synchronized (this) {
+						if (connection == null) {
+							connection = factory.newConnection(this.connectionName);
+						}
+					}
 				}
 				channel = connection.createChannel();
 			}

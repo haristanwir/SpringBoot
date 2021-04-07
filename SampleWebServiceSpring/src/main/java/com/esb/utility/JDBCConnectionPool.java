@@ -41,22 +41,22 @@ public class JDBCConnectionPool {
 		this.connectionPool = new ArrayList<Connection>();
 	}
 
-	public JDBCConnectionPool(String drivername, String url, String user, String password, Integer poolSize) {
-		this.drivername = drivername;
-		this.url = url;
-		this.user = user;
-		this.password = password;
-		if (poolSize > this.poolSize) {
-			this.poolSize = poolSize;
-		}
-		this.connectionPool = new ArrayList<Connection>();
-		for (int i = 0; i < this.poolSize; i++) {
-			Connection connection = createConnection(drivername, url, user, password);
-			if (connection != null) {
-				connectionPool.add(connection);
-			}
-		}
-	}
+//	public JDBCConnectionPool(String drivername, String url, String user, String password, Integer poolSize) {
+//		this.drivername = drivername;
+//		this.url = url;
+//		this.user = user;
+//		this.password = password;
+//		if (poolSize > this.poolSize) {
+//			this.poolSize = poolSize;
+//		}
+//		this.connectionPool = new ArrayList<Connection>();
+//		for (int i = 0; i < this.poolSize; i++) {
+//			Connection connection = createConnection(drivername, url, user, password);
+//			if (connection != null) {
+//				connectionPool.add(connection);
+//			}
+//		}
+//	}
 
 	public Connection getConnection() {
 		Connection connection = null;
@@ -88,6 +88,9 @@ public class JDBCConnectionPool {
 					}
 				}
 			}
+		}
+		if (connection == null) {
+			connection = createConnection(drivername, url, user, password);
 		}
 		try {
 			if (!connection.isValid(0)) {

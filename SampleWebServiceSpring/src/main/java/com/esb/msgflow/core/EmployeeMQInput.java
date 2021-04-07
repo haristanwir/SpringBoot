@@ -24,6 +24,9 @@ public class EmployeeMQInput {
 	@Autowired
 	private RabbitMQProdConnectionPool mqProducerPool;
 
+	@Autowired
+	private MessageProcessor messageProcesor;
+
 	private final Logger logger = LogManager.getLogger(EmployeeMQInput.class.getName());
 	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
@@ -70,6 +73,7 @@ public class EmployeeMQInput {
 						if (mqMessage != null) {
 							message = new String(mqMessage.getBody(), "UTF-8");
 							logger.info("message dequeued:" + message);
+							messageProcesor.processMessage(message);
 						}
 					}
 				} catch (Exception ex) {
