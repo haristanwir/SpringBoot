@@ -1,11 +1,11 @@
-package com.esb.msgflow.config;
+package com.esb.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.esb.msgflow.core.EmployeeMQInput;
-import com.esb.msgflow.core.EmployeeTimer;
+import com.esb.msgflow.EmployeeMQInput;
+import com.esb.msgflow.EmployeeTimer;
 import com.esb.utility.JDBCConnectionPool;
 import com.esb.utility.RabbitMQConsConnectionPool;
 import com.esb.utility.RabbitMQProdConnectionPool;

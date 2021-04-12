@@ -1,4 +1,4 @@
-package com.esb.msgflow.core;
+package com.esb.msgflow;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

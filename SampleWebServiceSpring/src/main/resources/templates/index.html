@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Web Console</title>
+<style type="text/css">
+table {
+	border: 1px solid black;
+	text-align: left;
+	width: 700px;
+}
+
+table td {
+	border-top: 1px solid black;
+}
+</style>
+<script type="text/javascript" th:src="@{/scripts/jquery-3.4.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/scripts/ajax.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var servlets = /*[[${servlets}]]*/
+	/*]]>*/
+
+	$(function() {
+		$.each(servlets, function(i, servlet) {
+			setTimeout(function() {
+				getFlowState(servlet);
+				getParameters(servlet);
+			}, 1000);
+		});
+	});
+
+	$(function() {
+		$.each(servlets, function(i, servlet) {
+			$("#start-button-" + servlet).click(function() {
+				startFlow(servlet);
+			});
+			$("#stop-button-" + servlet).click(function() {
+				stopFlow(servlet);
+			});
+			$("#reload-button-" + servlet).click(function() {
+				reloadFlow(servlet);
+			});
+			$("#update-button-" + servlet).click(function() {
+				setParameters(servlet);
+			});
+		});
+	});
+</script>
+
+</head>
+<body>
+	<table>
+		<tr>
+			<th>FlowName</th>
+			<th>Status</th>
+			<th>Action</th>
+		</tr>
+		<tr th:each="servlet: ${servlets}">
+			<td th:text="${servlet}" />
+			<td><span th:id="'status-label-' + ${servlet}"></span></td>
+			<td><input th:id="'start-button-' + ${servlet}" type="button"
+				value="Start" disabled="disabled" /> <input
+				th:id="'stop-button-' + ${servlet}" type="button" value="Stop"
+				disabled="disabled" /> <input th:id="'reload-button-' + ${servlet}"
+				type="button" value="Reload" /></td>
+			<td>Threads: <span th:id="'threads-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'threads-value-'+ ${servlet}" type="number" value="1" min="1" max="256" /></td>
+			<td>TPS: <span th:id="'tps-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'tps-value-'+ ${servlet}" type="number" value="1" min="1" /></td>
+			<td><input th:id="'update-button-'+ ${servlet}" type="button" value="Update" /></td>
+		</tr>
+	</table>
+</body>
+</html>

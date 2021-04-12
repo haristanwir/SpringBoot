@@ -1,4 +1,4 @@
-package com.esb.msgflow.core;
+package com.esb.msgflow;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,16 +36,26 @@ public class EmployeeTimer {
 		this.timeoutSec = timeoutSec;
 	}
 
+	public Boolean getIsInitialized() {
+		return isInitialized;
+	}
+
 	@PostConstruct
-	public void init() {
-		isInitialized = true;
+	public synchronized void init() {
+		if (isInitialized) {
+			return;
+		}
 		scheduler = Executors.newSingleThreadScheduledExecutor();
 		TimerWorker timerThread = new TimerWorker(timerID);
 		scheduler.scheduleWithFixedDelay(timerThread, 0, timeoutSec, TimeUnit.SECONDS);
+		isInitialized = true;
 	}
 
 	@PreDestroy
-	public void shutdown() {
+	public synchronized void shutdown() {
+		if (!isInitialized) {
+			return;
+		}
 		scheduler.shutdown();
 		isInitialized = false;
 	}
@@ -68,7 +78,6 @@ public class EmployeeTimer {
 				Errorlogger.error(ErrorHandling.getStackTrace(ex));
 			}
 		}
-
 	}
 
 }

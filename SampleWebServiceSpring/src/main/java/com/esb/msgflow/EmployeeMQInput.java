@@ -1,4 +1,4 @@
-package com.esb.msgflow.core;
+package com.esb.msgflow;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,6 +34,7 @@ public class EmployeeMQInput {
 	private String queueName = null;
 	private String boqQueueName = null;
 	private Integer threadPoolSize = null;
+	private Integer threadPoolTPS = null;
 	private ThroughputController tpsController = null;
 	private Boolean isInitialized = false;
 
@@ -41,12 +42,36 @@ public class EmployeeMQInput {
 		this.queueName = queueName;
 		this.boqQueueName = queueName + ".BOQ";
 		this.threadPoolSize = threadPoolSize;
-		this.tpsController = new ThroughputController(tps);
+		this.threadPoolTPS = tps;
+	}
+
+	public Boolean getIsInitialized() {
+		return isInitialized;
+	}
+
+	public Integer getThreadPoolSize() {
+		return threadPoolSize;
+	}
+
+	public void setThreadPoolSize(Integer threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
+	}
+
+	public Integer getThreadPoolTPS() {
+		return threadPoolTPS;
+	}
+
+	public void setThreadPoolTPS(Integer threadPoolTPS) {
+		this.threadPoolTPS = threadPoolTPS;
 	}
 
 	@PostConstruct
-	public void init() {
+	public synchronized void init() {
+		if (isInitialized) {
+			return;
+		}
 		isInitialized = true;
+		tpsController = new ThroughputController(threadPoolTPS);
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
 		for (int i = 0; i < threadPoolSize; i++) {
 			executorService.execute(new MQWorker());
@@ -54,9 +79,12 @@ public class EmployeeMQInput {
 	}
 
 	@PreDestroy
-	public void shutdown() {
-		executorService.shutdown();
+	public synchronized void shutdown() {
+		if (!isInitialized) {
+			return;
+		}
 		isInitialized = false;
+		executorService.shutdown();
 	}
 
 	private class MQWorker implements Runnable {
