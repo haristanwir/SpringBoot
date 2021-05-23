@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+
+		<Console name="Console">
+			<PatternLayout>
+				<Pattern>%d{dd MMM yyyy HH:mm:ss,SSS}|[%p]|{%t}:%m%n</Pattern>
+			</PatternLayout>
+		</Console>
+
+	</Appenders>
+	<Loggers>
+
+		<asyncRoot level="info" includeLocation="true"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</asyncRoot>
+
+	</Loggers>
+</Configuration>
