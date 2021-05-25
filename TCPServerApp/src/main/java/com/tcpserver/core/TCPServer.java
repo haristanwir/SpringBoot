@@ -25,7 +25,6 @@ public class TCPServer extends Thread {
 	private ArrayList<SocketHandler> socketList = new ArrayList<SocketHandler>();
 
 	public TCPServer(Integer port) throws IOException {
-		super();
 		this.port = port;
 		this.serverSocket = new ServerSocket(this.port);
 		this.executorService = Executors.newCachedThreadPool();

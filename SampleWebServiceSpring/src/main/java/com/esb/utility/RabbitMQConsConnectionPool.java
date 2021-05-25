@@ -212,7 +212,10 @@ public class RabbitMQConsConnectionPool {
 			}
 			if (channel.isOpen()) {
 				channel.queueDeclare(queuename, true, false, false, null);
-				GetResponse mqMessage = channel.basicGet(queuename, true);
+				GetResponse mqMessage = channel.basicGet(queuename, false);
+				if (mqMessage != null) {
+					channel.basicAck(mqMessage.getEnvelope().getDeliveryTag(), false);
+				}
 				releaseChannel(channel);
 				return mqMessage;
 			} else {
