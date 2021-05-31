@@ -67,7 +67,7 @@ table td {
 				disabled="disabled" /> <input th:id="'reload-button-' + ${servlet}"
 				type="button" value="Reload" /></td>
 			<td>Threads: <span th:id="'threads-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'threads-value-'+ ${servlet}" type="number" value="1" min="1" max="256" /></td>
-			<td>TPS: <span th:id="'tps-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'tps-value-'+ ${servlet}" type="number" value="1" min="1" /></td>
+			<td>TPS: <span th:id="'tps-label-'+ ${servlet}"></span><br/><input style="width: 60px" th:id="'tps-value-'+ ${servlet}" type="number" value="1" min="0" /></td>
 			<td><input th:id="'update-button-'+ ${servlet}" type="button" value="Update" /></td>
 		</tr>
 	</table>

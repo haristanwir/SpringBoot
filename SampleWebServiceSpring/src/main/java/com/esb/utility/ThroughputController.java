@@ -14,12 +14,21 @@ public class ThroughputController {
 	private Integer tps = null;
 	private Long lastSecondStartTime = null;
 	private Integer eventCounter = 0;
+	private Boolean tpsEnabled = null;
 
 	public ThroughputController(Integer tps) {
-		this.tps = (tps - 1 < 0) ? 0 : tps - 1;
+		if (tps > 0) {
+			this.tps = (tps - 1 < 0) ? 0 : tps - 1;
+			this.tpsEnabled = true;
+		} else {
+			this.tpsEnabled = false;
+		}
 	}
 
 	public synchronized void evaluateTPS() throws InterruptedException {
+		if (!tpsEnabled) {
+			return;
+		}
 		if (lastSecondStartTime == null) {
 			lastSecondStartTime = System.currentTimeMillis();
 		}

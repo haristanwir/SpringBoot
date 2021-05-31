@@ -1,5 +1,8 @@
 package com.esb.config;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,11 +10,18 @@ import org.springframework.context.annotation.Configuration;
 import com.esb.msgflow.EmployeeMQInput;
 import com.esb.msgflow.EmployeeTimer;
 import com.esb.utility.JDBCConnectionPool;
+import com.esb.utility.RabbitMQConnection;
 import com.esb.utility.RabbitMQConsConnectionPool;
 import com.esb.utility.RabbitMQProdConnectionPool;
 
 @Configuration
 public class ApplicationConfiguration {
+
+	@Bean
+	public RabbitMQConnection mqConnection(@Value("${rabbitmq.ip}") String mq_ip, @Value("${rabbitmq.port}") Integer mq_port) throws IOException, TimeoutException {
+		RabbitMQConnection mqConnection = new RabbitMQConnection(mq_ip, mq_port);
+		return mqConnection;
+	}
 
 	@Bean
 	public RabbitMQConsConnectionPool mqConsumerPool(@Value("${rabbitmq.ip}") String mq_ip, @Value("${rabbitmq.port}") Integer mq_port) {
