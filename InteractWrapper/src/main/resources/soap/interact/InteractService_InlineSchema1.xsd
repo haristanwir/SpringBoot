@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://soap.api.interact.unicacorp.com" xmlns:ax21="http://api.interact.unicacorp.com/xsd" xmlns:ax22="http://api.interact.unicacorp.com/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns="http://soap.api.interact.unicacorp.com" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <xsd:import namespace="http://api.interact.unicacorp.com/xsd" schemaLocation="InteractService_InlineSchema2.xsd"/>
+            <xsd:element ibmSchExtn:docRoot="true" name="startSession">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element name="relyOnExistingSession" type="xsd:boolean"/>
+                        <xsd:element name="debug" type="xsd:boolean"/>
+                        <xsd:element name="interactiveChannel" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" name="audienceID" nillable="true" type="ax21:NameValuePairImpl"/>
+                        <xsd:element name="audienceLevel" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="ax21:NameValuePairImpl"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="startSessionResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="setDebug">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element name="debug" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="setDebugResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="setAudience">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" name="audienceID" nillable="true" type="ax21:NameValuePairImpl"/>
+                        <xsd:element name="audienceLevel" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="ax21:NameValuePairImpl"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="setAudienceResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="postEvent">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element name="eventName" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="eventParameters" nillable="true" type="ax21:NameValuePairImpl"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="postEventResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getVersionResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getProfile">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getProfileResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getOffersForMultipleInteractionPoints">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="requests" nillable="true" type="ax21:GetOfferRequest"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getOffersForMultipleInteractionPointsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getOffers">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element name="iPoint" nillable="true" type="xsd:string"/>
+                        <xsd:element name="numberRequested" type="xsd:int"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="getOffersResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="executeBatch">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="commands" nillable="true" type="ax21:CommandImpl"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="executeBatchResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:BatchResponse"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="endSession">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="endSessionResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element minOccurs="0" name="return" nillable="true" type="ax21:Response"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>

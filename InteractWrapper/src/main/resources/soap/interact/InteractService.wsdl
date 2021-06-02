@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://soap.api.interact.unicacorp.com" xmlns:ax21="http://api.interact.unicacorp.com/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns="http://soap.api.interact.unicacorp.com" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<wsdl:documentation>
+		<wsdl:appinfo source="WMQI_APPINFO">
+			<MRWSDLAppInfo imported="true">
+				<generatedXSD location="InteractService_InlineSchema1.xsd"/>
+				<generatedXSD location="InteractService_InlineSchema2.xsd"/>
+				<binding hasEncoding="false" imported="true" name="InteractSoapServiceSoap11Binding" originalBindingStyle="document"/>
+				<binding hasEncoding="false" imported="false" name="InteractSoapServiceSoap12Binding" originalBindingStyle="document"/>
+				<binding hasEncoding="false" imported="false" name="InteractSoapServiceHttpBinding" originalBindingStyle="document"/>
+			</MRWSDLAppInfo>
+		</wsdl:appinfo>
+	</wsdl:documentation>
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://soap.api.interact.unicacorp.com" xmlns:ax22="http://api.interact.unicacorp.com/xsd" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+			<xsd:import namespace="http://api.interact.unicacorp.com/xsd" schemaLocation="InteractService_InlineSchema2.xsd"/>
+			<xsd:include schemaLocation="InteractService_InlineSchema1.xsd"/>
+		</xsd:schema>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.interact.unicacorp.com/xsd">
+			<xsd:include schemaLocation="InteractService_InlineSchema2.xsd"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getOffersForMultipleInteractionPointsRequest">
+		<wsdl:part element="ns:getOffersForMultipleInteractionPoints" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getOffersForMultipleInteractionPointsResponse">
+		<wsdl:part element="ns:getOffersForMultipleInteractionPointsResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getProfileRequest">
+		<wsdl:part element="ns:getProfile" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getProfileResponse">
+		<wsdl:part element="ns:getProfileResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getVersionRequest"/>
+	<wsdl:message name="getVersionResponse">
+		<wsdl:part element="ns:getVersionResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="postEventRequest">
+		<wsdl:part element="ns:postEvent" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="postEventResponse">
+		<wsdl:part element="ns:postEventResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="executeBatchRequest">
+		<wsdl:part element="ns:executeBatch" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="executeBatchResponse">
+		<wsdl:part element="ns:executeBatchResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getOffersRequest">
+		<wsdl:part element="ns:getOffers" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="getOffersResponse">
+		<wsdl:part element="ns:getOffersResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="setDebugRequest">
+		<wsdl:part element="ns:setDebug" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="setDebugResponse">
+		<wsdl:part element="ns:setDebugResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="setAudienceRequest">
+		<wsdl:part element="ns:setAudience" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="setAudienceResponse">
+		<wsdl:part element="ns:setAudienceResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="startSessionRequest">
+		<wsdl:part element="ns:startSession" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="startSessionResponse">
+		<wsdl:part element="ns:startSessionResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="endSessionRequest">
+		<wsdl:part element="ns:endSession" name="parameters"/>
+	</wsdl:message>
+	<wsdl:message name="endSessionResponse">
+		<wsdl:part element="ns:endSessionResponse" name="parameters"/>
+	</wsdl:message>
+	<wsdl:portType name="InteractSoapServicePortType">
+		<wsdl:operation name="getOffersForMultipleInteractionPoints">
+			<wsdl:input message="ns:getOffersForMultipleInteractionPointsRequest" wsaw:Action="urn:getOffersForMultipleInteractionPoints"/>
+			<wsdl:output message="ns:getOffersForMultipleInteractionPointsResponse" wsaw:Action="urn:getOffersForMultipleInteractionPointsResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProfile">
+			<wsdl:input message="ns:getProfileRequest" wsaw:Action="urn:getProfile"/>
+			<wsdl:output message="ns:getProfileResponse" wsaw:Action="urn:getProfileResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getVersion">
+			<wsdl:input message="ns:getVersionRequest" wsaw:Action="urn:getVersion"/>
+			<wsdl:output message="ns:getVersionResponse" wsaw:Action="urn:getVersionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="postEvent">
+			<wsdl:input message="ns:postEventRequest" wsaw:Action="urn:postEvent"/>
+			<wsdl:output message="ns:postEventResponse" wsaw:Action="urn:postEventResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="executeBatch">
+			<wsdl:input message="ns:executeBatchRequest" wsaw:Action="urn:executeBatch"/>
+			<wsdl:output message="ns:executeBatchResponse" wsaw:Action="urn:executeBatchResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="getOffers">
+			<wsdl:input message="ns:getOffersRequest" wsaw:Action="urn:getOffers"/>
+			<wsdl:output message="ns:getOffersResponse" wsaw:Action="urn:getOffersResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="setDebug">
+			<wsdl:input message="ns:setDebugRequest" wsaw:Action="urn:setDebug"/>
+			<wsdl:output message="ns:setDebugResponse" wsaw:Action="urn:setDebugResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="setAudience">
+			<wsdl:input message="ns:setAudienceRequest" wsaw:Action="urn:setAudience"/>
+			<wsdl:output message="ns:setAudienceResponse" wsaw:Action="urn:setAudienceResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="startSession">
+			<wsdl:input message="ns:startSessionRequest" wsaw:Action="urn:startSession"/>
+			<wsdl:output message="ns:startSessionResponse" wsaw:Action="urn:startSessionResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="endSession">
+			<wsdl:input message="ns:endSessionRequest" wsaw:Action="urn:endSession"/>
+			<wsdl:output message="ns:endSessionResponse" wsaw:Action="urn:endSessionResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="InteractSoapServiceSoap11Binding" type="ns:InteractSoapServicePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getOffersForMultipleInteractionPoints">
+			<soap:operation soapAction="urn:getOffersForMultipleInteractionPoints" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProfile">
+			<soap:operation soapAction="urn:getProfile" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getVersion">
+			<soap:operation soapAction="urn:getVersion" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="postEvent">
+			<soap:operation soapAction="urn:postEvent" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="executeBatch">
+			<soap:operation soapAction="urn:executeBatch" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getOffers">
+			<soap:operation soapAction="urn:getOffers" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setDebug">
+			<soap:operation soapAction="urn:setDebug" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="startSession">
+			<soap:operation soapAction="urn:startSession" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setAudience">
+			<soap:operation soapAction="urn:setAudience" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="endSession">
+			<soap:operation soapAction="urn:endSession" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="InteractSoapServiceSoap12Binding" type="ns:InteractSoapServicePortType">
+		<soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getOffersForMultipleInteractionPoints">
+			<soap12:operation soapAction="urn:getOffersForMultipleInteractionPoints" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProfile">
+			<soap12:operation soapAction="urn:getProfile" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getVersion">
+			<soap12:operation soapAction="urn:getVersion" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="postEvent">
+			<soap12:operation soapAction="urn:postEvent" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="executeBatch">
+			<soap12:operation soapAction="urn:executeBatch" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getOffers">
+			<soap12:operation soapAction="urn:getOffers" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setDebug">
+			<soap12:operation soapAction="urn:setDebug" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="startSession">
+			<soap12:operation soapAction="urn:startSession" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setAudience">
+			<soap12:operation soapAction="urn:setAudience" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="endSession">
+			<soap12:operation soapAction="urn:endSession" style="document"/>
+			<wsdl:input>
+				<soap12:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="InteractSoapServiceHttpBinding" type="ns:InteractSoapServicePortType">
+		<http:binding verb="POST"/>
+		<wsdl:operation name="getOffersForMultipleInteractionPoints">
+			<http:operation location="InteractSoapService/getOffersForMultipleInteractionPoints"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProfile">
+			<http:operation location="InteractSoapService/getProfile"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getVersion">
+			<http:operation location="InteractSoapService/getVersion"/>
+			<wsdl:input/>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="postEvent">
+			<http:operation location="InteractSoapService/postEvent"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="executeBatch">
+			<http:operation location="InteractSoapService/executeBatch"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getOffers">
+			<http:operation location="InteractSoapService/getOffers"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setDebug">
+			<http:operation location="InteractSoapService/setDebug"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="startSession">
+			<http:operation location="InteractSoapService/startSession"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="setAudience">
+			<http:operation location="InteractSoapService/setAudience"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="endSession">
+			<http:operation location="InteractSoapService/endSession"/>
+			<wsdl:input>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:input>
+			<wsdl:output>
+				<mime:content part="parameters" type="text/xml"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="InteractService">
+		<wsdl:port binding="ns:InteractSoapServiceSoap11Binding" name="InteractSoapServiceHttpSoap11Endpoint">
+			<soap:address location="http://localhost:7001/interact/services/InteractService"/>
+		</wsdl:port>
+		<wsdl:port binding="ns:InteractSoapServiceSoap12Binding" name="InteractSoapServiceHttpSoap12Endpoint">
+			<soap12:address location="http://localhost:7001/interact/services/InteractService"/>
+		</wsdl:port>
+		<wsdl:port binding="ns:InteractSoapServiceHttpBinding" name="InteractSoapServiceHttpEndpoint">
+			<http:address location="http://localhost:7001/interact/services/InteractService"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
