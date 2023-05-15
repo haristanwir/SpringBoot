@@ -7,28 +7,45 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.jms.Connection;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
+import com.esb.utility.ActiveMQConnection;
+import com.esb.utility.ActiveMQProdConnectionPool;
+import com.esb.utility.ActiveMQQueueRetryThread;
 import com.esb.utility.ErrorHandling;
-import com.esb.utility.RabbitMQConnection;
-import com.esb.utility.RabbitMQProdConnectionPool;
 import com.esb.utility.ThroughputController;
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.ShutdownSignalException;
 
 public class EmployeeMQInput {
 
-	@Autowired
-	private RabbitMQConnection mqConnection;
+	@Value("${activemq.username}")
+	private String mq_username;
+
+	@Value("${activemq.password}")
+	private String mq_password;
+	
+	@Value("${activemq.ip}")
+	private String mq_ip;
+
+	@Value("${activemq.port}")
+	private Integer mq_port;
 
 	@Autowired
-	private RabbitMQProdConnectionPool mqProducerPool;
+	private ActiveMQProdConnectionPool mqProducerPool;
 
 	@Autowired
 	private MessageProcessor messageProcesor;
@@ -36,9 +53,11 @@ public class EmployeeMQInput {
 	private final Logger logger = LogManager.getLogger(EmployeeMQInput.class.getName());
 	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
+	private ExecutorService retryExecutorService = Executors.newFixedThreadPool(1);
 	private ExecutorService executorService = null;
-	private Channel channel = null;
-	private ArrayList<String> consumerTagList = new ArrayList<String>();
+	private String connectionUrl = null;
+	private ActiveMQConnectionFactory factory = null;
+	private ArrayList<ActiveMQConnection> consumerTagList = new ArrayList<ActiveMQConnection>();
 	private String queueName = null;
 	private String boqQueueName = null;
 	private Integer threadPoolSize = null;
@@ -74,18 +93,22 @@ public class EmployeeMQInput {
 	}
 
 	@PostConstruct
-	public synchronized void init() throws IOException {
+	public synchronized void init() throws IOException, JMSException {
 		if (isInitialized) {
 			return;
 		}
 		isInitialized = true;
 		tpsController = new ThroughputController(threadPoolTPS);
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
-		channel = mqConnection.getChannel();
-		channel.basicQos(threadPoolTPS, true);
-		channel.queueDeclare(queueName, true, false, false, null);
+		connectionUrl = "failover:" + "(" + "tcp://" + mq_ip + ":" + mq_port + ")" + "?jms.prefetchPolicy.all=" + threadPoolTPS;
+		factory = new ActiveMQConnectionFactory(mq_username, mq_password, connectionUrl);
 		for (int i = 0; i < threadPoolSize; i++) {
-			consumerTagList.add(channel.basicConsume(queueName, false, new RabbitMQConsumerCallback()));
+			Connection connection = factory.createConnection();
+			Session session = connection.createSession(false, ActiveMQSession.INDIVIDUAL_ACKNOWLEDGE);
+			Destination destination = session.createQueue(queueName);
+			MessageConsumer consumer = session.createConsumer(destination);
+			consumer.setMessageListener(new ActiveMQConsumerCallback());
+			consumerTagList.add(new ActiveMQConnection(connection, session, destination, consumer, null));
 		}
 	}
 
@@ -95,62 +118,36 @@ public class EmployeeMQInput {
 			return;
 		}
 		isInitialized = false;
-		for (String consumerTag : consumerTagList) {
+		for (ActiveMQConnection consumerTag : consumerTagList) {
 			try {
-				channel.basicCancel(consumerTag);
+				consumerTag.shutdown();
 			} catch (Exception ex) {
 			}
 		}
-		try {
-			channel.close();
-		} catch (Exception ex) {
-		}
 		consumerTagList.clear();
-		channel = null;
+		factory = null;
 		executorService.shutdown();
 	}
 
-	private class RabbitMQConsumerCallback implements Consumer {
+	private class ActiveMQConsumerCallback implements MessageListener  {
 		@Override
-		public void handleConsumeOk(String consumerTag) {
-		}
-
-		@Override
-		public void handleCancelOk(String consumerTag) {
-		}
-
-		@Override
-		public void handleCancel(String consumerTag) throws IOException {
-		}
-
-		@Override
-		public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] messageBody) throws IOException {
+		public void onMessage(Message message) {
 			try {
 				if (isInitialized) {
-					tpsController.evaluateTPS();
-					executorService.execute(new MQWorker(messageBody));
-					channel.basicAck(envelope.getDeliveryTag(), false);
+					executorService.execute(new MQWorker(message));
 				}
 			} catch (Exception ex) {
 				logger.error(ex.getMessage());
 				Errorlogger.error(ErrorHandling.getStackTrace(ex));
 			}
 		}
-
-		@Override
-		public void handleShutdownSignal(String consumerTag, ShutdownSignalException sig) {
-		}
-
-		@Override
-		public void handleRecoverOk(String consumerTag) {
-		}
 	}
 
 	private class MQWorker implements Runnable {
-		private byte[] messageBody = null;
+		private Message message;
 
-		public MQWorker(byte[] messageBody) {
-			this.messageBody = messageBody;
+		public MQWorker(Message message) {
+			this.message = message;
 		}
 
 		@Override
@@ -158,20 +155,31 @@ public class EmployeeMQInput {
 			if (isInitialized) {
 				try {
 					if (isInitialized) {
-						if (messageBody != null && messageBody.length > 0) {
-							String message = new String(messageBody, "UTF-8");
+						if (message != null) {
+							tpsController.evaluateTPS();
+							TextMessage textMessage = (TextMessage) message;
+							String message = textMessage.getText();
 							logger.info("message dequeued:" + message);
 							messageProcesor.processMessage(message);
+							this.message.acknowledge();
 						}
 					}
 				} catch (Exception ex) {
 					logger.error(ex.getMessage());
 					Errorlogger.error(ErrorHandling.getStackTrace(ex));
 					try {
-						mqProducerPool.enqueue(new String(messageBody, "UTF-8"), boqQueueName, null);
+						mqProducerPool.enqueue(((TextMessage) message).getText(), boqQueueName, DeliveryMode.PERSISTENT, 4);
 					} catch (Exception _ex) {
 						logger.error(_ex.getMessage());
 						Errorlogger.error(ErrorHandling.getStackTrace(_ex));
+						try {
+							retryExecutorService.execute(new ActiveMQQueueRetryThread(mqProducerPool, boqQueueName, ((TextMessage) message).getText(), DeliveryMode.PERSISTENT, 4, 10000l));
+						} catch (JMSException e) {
+						}
+					}
+					try {
+						this.message.acknowledge();
+					} catch (JMSException e) {
 					}
 				}
 			}

@@ -14,8 +14,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.annotation.PreDestroy;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -165,7 +163,6 @@ public class RabbitMQProdConnectionPool {
 		}
 	}
 
-	@PreDestroy
 	public void shutdown() {
 		synchronized (channelPool) {
 			for (Channel channel : channelPool) {

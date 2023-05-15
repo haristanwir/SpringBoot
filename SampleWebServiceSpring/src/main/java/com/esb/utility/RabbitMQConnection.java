@@ -3,8 +3,6 @@ package com.esb.utility;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import javax.annotation.PreDestroy;
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -29,7 +27,6 @@ public class RabbitMQConnection {
 		return connection.createChannel();
 	}
 
-	@PreDestroy
 	public void shutdown() {
 		try {
 			synchronized (connection) {

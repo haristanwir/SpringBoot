@@ -6,23 +6,20 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.jms.DeliveryMode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import com.esb.utility.ActiveMQProdConnectionPool;
 import com.esb.utility.ErrorHandling;
 import com.esb.utility.RabbitMQProdConnectionPool;
 
-public class EmployeeTimer {
+public class _EmployeeTimer {
 
 	@Autowired
-	private ActiveMQProdConnectionPool mqProducerPool;
+	private RabbitMQProdConnectionPool mqProducerPool;
 
-	private final Logger logger = LogManager.getLogger(EmployeeTimer.class.getName());
+	private final Logger logger = LogManager.getLogger(EmployeeMQInput.class.getName());
 	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private ScheduledExecutorService scheduler = null;
@@ -31,7 +28,7 @@ public class EmployeeTimer {
 	private Integer timeoutSec = null;
 	private Boolean isInitialized = false;
 
-	public EmployeeTimer(String queueName, String timerID, Integer timeoutSec) {
+	public _EmployeeTimer(String queueName, String timerID, Integer timeoutSec) {
 		this.queueName = queueName;
 		this.timerID = timerID;
 		this.timeoutSec = timeoutSec;
@@ -73,10 +70,10 @@ public class EmployeeTimer {
 			try {
 				String message = "Timer called: " + timerID + "_" + System.currentTimeMillis();
 				logger.info(message);
-				mqProducerPool.enqueue(message, queueName, DeliveryMode.PERSISTENT, 4);
+				mqProducerPool.enqueue(message, queueName, null);
 			} catch (Exception ex) {
 				logger.error(ex.getMessage());
-				Errorlogger.error(ErrorHandling.getStackTrace(ex));				
+				Errorlogger.error(ErrorHandling.getStackTrace(ex));
 			}
 		}
 	}

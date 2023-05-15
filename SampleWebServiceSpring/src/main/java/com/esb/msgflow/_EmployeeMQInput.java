@@ -1,5 +1,7 @@
 package com.esb.msgflow;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,15 +13,19 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.esb.utility.ErrorHandling;
-import com.esb.utility.RabbitMQConsConnectionPool;
+import com.esb.utility.RabbitMQConnection;
 import com.esb.utility.RabbitMQProdConnectionPool;
 import com.esb.utility.ThroughputController;
-import com.rabbitmq.client.GetResponse;
+import com.rabbitmq.client.AMQP.BasicProperties;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.ShutdownSignalException;
 
 public class _EmployeeMQInput {
 
 	@Autowired
-	private RabbitMQConsConnectionPool mqConsumerPool;
+	private RabbitMQConnection mqConnection;
 
 	@Autowired
 	private RabbitMQProdConnectionPool mqProducerPool;
@@ -31,6 +37,8 @@ public class _EmployeeMQInput {
 	private final Logger Errorlogger = LogManager.getLogger(ErrorHandling.class.getName());
 
 	private ExecutorService executorService = null;
+	private Channel channel = null;
+	private ArrayList<String> consumerTagList = new ArrayList<String>();
 	private String queueName = null;
 	private String boqQueueName = null;
 	private Integer threadPoolSize = null;
@@ -66,15 +74,18 @@ public class _EmployeeMQInput {
 	}
 
 	@PostConstruct
-	public synchronized void init() {
+	public synchronized void init() throws IOException {
 		if (isInitialized) {
 			return;
 		}
 		isInitialized = true;
 		tpsController = new ThroughputController(threadPoolTPS);
 		executorService = Executors.newFixedThreadPool(threadPoolSize);
+		channel = mqConnection.getChannel();
+		channel.basicQos(threadPoolTPS, true);
+		channel.queueDeclare(queueName, true, false, false, null);
 		for (int i = 0; i < threadPoolSize; i++) {
-			executorService.execute(new MQWorker());
+			consumerTagList.add(channel.basicConsume(queueName, false, new RabbitMQConsumerCallback()));
 		}
 	}
 
@@ -84,34 +95,89 @@ public class _EmployeeMQInput {
 			return;
 		}
 		isInitialized = false;
+		for (String consumerTag : consumerTagList) {
+			try {
+				channel.basicCancel(consumerTag);
+			} catch (Exception ex) {
+			}
+		}
+		try {
+			channel.close();
+		} catch (Exception ex) {
+		}
+		consumerTagList.clear();
+		channel = null;
 		executorService.shutdown();
 	}
 
+	private class RabbitMQConsumerCallback implements Consumer {
+		@Override
+		public void handleConsumeOk(String consumerTag) {
+		}
+
+		@Override
+		public void handleCancelOk(String consumerTag) {
+		}
+
+		@Override
+		public void handleCancel(String consumerTag) throws IOException {
+		}
+
+		@Override
+		public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] messageBody) throws IOException {
+			try {
+				if (isInitialized) {
+					executorService.execute(new MQWorker(messageBody, envelope.getDeliveryTag()));
+				}
+			} catch (Exception ex) {
+				logger.error(ex.getMessage());
+				Errorlogger.error(ErrorHandling.getStackTrace(ex));
+			}
+		}
+
+		@Override
+		public void handleShutdownSignal(String consumerTag, ShutdownSignalException sig) {
+		}
+
+		@Override
+		public void handleRecoverOk(String consumerTag) {
+		}
+	}
+
 	private class MQWorker implements Runnable {
-		private String message = null;
+		private byte[] messageBody = null;
+		private long deliveryTag;
+
+		public MQWorker(byte[] messageBody, long deliveryTag) {
+			this.messageBody = messageBody;
+			this.deliveryTag = deliveryTag;
+		}
 
 		@Override
 		public void run() {
-			while (isInitialized) {
+			if (isInitialized) {
 				try {
-					tpsController.evaluateTPS();
-					message = null;
 					if (isInitialized) {
-						GetResponse mqMessage = mqConsumerPool.dequeue(queueName);
-						if (mqMessage != null) {
-							message = new String(mqMessage.getBody(), "UTF-8");
+						if (messageBody != null && messageBody.length > 0) {
+							tpsController.evaluateTPS();
+							String message = new String(messageBody, "UTF-8");
 							logger.info("message dequeued:" + message);
 							messageProcesor.processMessage(message);
+							channel.basicAck(deliveryTag, false);
 						}
 					}
 				} catch (Exception ex) {
 					logger.error(ex.getMessage());
 					Errorlogger.error(ErrorHandling.getStackTrace(ex));
 					try {
-						mqProducerPool.enqueue(message, boqQueueName, null);
+						mqProducerPool.enqueue(new String(messageBody, "UTF-8"), boqQueueName, null);
 					} catch (Exception _ex) {
 						logger.error(_ex.getMessage());
 						Errorlogger.error(ErrorHandling.getStackTrace(_ex));
+					}
+					try {
+						channel.basicAck(deliveryTag, false);
+					} catch (IOException e) {
 					}
 				}
 			}

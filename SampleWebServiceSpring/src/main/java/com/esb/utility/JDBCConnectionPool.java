@@ -10,8 +10,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.PreDestroy;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,14 +32,55 @@ public class JDBCConnectionPool {
 	private String password = null;
 	private Integer poolSize = 0;
 	private Long connectionWait = 500L;
-	private List<Connection> connectionPool = null;
+	private Long connectionEvictionTimeout = (long) (1000 * 60 * 5);
+	private ScheduledExecutorService schedulerService = Executors.newSingleThreadScheduledExecutor();
+	private List<InnerConnection> connectionPool = null;
 
 	public JDBCConnectionPool(String drivername, String url, String user, String password) {
 		this.drivername = drivername;
 		this.url = url;
 		this.user = user;
 		this.password = password;
-		this.connectionPool = new ArrayList<Connection>();
+		this.connectionPool = new ArrayList<InnerConnection>();
+		schedulerService.scheduleWithFixedDelay(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (!connectionPool.isEmpty()) {
+						synchronized (connectionPool) {
+							if (!connectionPool.isEmpty()) {
+								ArrayList<InnerConnection> invalidConnections = new ArrayList<InnerConnection>();
+								for (InnerConnection innerConnection : connectionPool) {
+									Long timestamp = innerConnection.getTimestamp();
+									if (timestamp < System.currentTimeMillis() - connectionEvictionTimeout) {
+										invalidConnections.add(innerConnection);
+									}
+								}
+								if (!invalidConnections.isEmpty()) {
+									int oldpoolsize = connectionPool.size();
+									connectionPool.removeAll(invalidConnections);
+									int newpoolsize = connectionPool.size();
+									for (InnerConnection innerConnection : invalidConnections) {
+										Connection connection = innerConnection.getConnection();
+										try {
+											connection.close();
+										} catch (SQLException ex) {
+										}
+										connection = null;
+									}
+									if (newpoolsize < oldpoolsize) {
+										logger.info("DB Connections closed:" + invalidConnections.size());
+									}
+								}
+							}
+						}
+					}
+				} catch (Exception ex) {
+					logger.error(ErrorHandling.getMessage(ex));
+					Errorlogger.error(ErrorHandling.getStackTrace(ex));
+				}
+			}
+		}, 0, connectionEvictionTimeout + (1000 * 60), TimeUnit.MILLISECONDS);
 	}
 
 //	public JDBCConnectionPool(String drivername, String url, String user, String password, Integer poolSize) {
@@ -63,7 +105,8 @@ public class JDBCConnectionPool {
 		if (!connectionPool.isEmpty()) {
 			synchronized (connectionPool) {
 				if (!connectionPool.isEmpty()) {
-					connection = connectionPool.remove(0);
+					InnerConnection innerConnection = connectionPool.remove(0);
+					connection = innerConnection != null ? innerConnection.getConnection() : null;
 				} else {
 					connection = createConnection(drivername, url, user, password);
 				}
@@ -80,7 +123,8 @@ public class JDBCConnectionPool {
 					if (!connectionPool.isEmpty()) {
 						synchronized (connectionPool) {
 							if (!connectionPool.isEmpty()) {
-								connection = connectionPool.remove(0);
+								InnerConnection innerConnection = connectionPool.remove(0);
+								connection = innerConnection != null ? innerConnection.getConnection() : null;
 							} else {
 								connection = createConnection(drivername, url, user, password);
 							}
@@ -107,8 +151,14 @@ public class JDBCConnectionPool {
 	}
 
 	public boolean releaseConnection(Connection connection) {
-		synchronized (connectionPool) {
-			return connectionPool.add(connection);
+		if (connection != null) {
+			synchronized (connectionPool) {
+//				return connectionPool.add(connection);
+				connectionPool.add(0, new InnerConnection(connection, System.currentTimeMillis()));
+				return true;
+			}
+		} else {
+			return false;
 		}
 	}
 
@@ -118,30 +168,32 @@ public class JDBCConnectionPool {
 			Class.forName(drivername);
 			connection = DriverManager.getConnection(url, user, password);
 		} catch (SQLException ex) {
-			logger.error(ex.getMessage());
+			logger.error(ErrorHandling.getMessage(ex));
 			Errorlogger.error(ErrorHandling.getStackTrace(ex));
 		} catch (ClassNotFoundException ex) {
-			logger.error(ex.getMessage());
+			logger.error(ErrorHandling.getMessage(ex));
 			Errorlogger.error(ErrorHandling.getStackTrace(ex));
 		}
 		return connection;
 	}
 
-	@PreDestroy
 	public void shutdown() {
 		synchronized (connectionPool) {
-			for (Connection connection : connectionPool) {
+			for (InnerConnection innerConnection : connectionPool) {
+				Connection connection = innerConnection.getConnection();
 				try {
 					connection.close();
 				} catch (SQLException ex) {
 				}
 				connection = null;
+				innerConnection = null;
 			}
 			try {
 				connectionPool.clear();
 			} catch (Exception ex) {
 			}
 		}
+//		schedulerService.shutdownNow();
 	}
 
 	public int getSize() {
@@ -168,8 +220,35 @@ public class JDBCConnectionPool {
 		return password;
 	}
 
-	public List<Connection> getConnectionPool() {
+	public List<InnerConnection> getConnectionPool() {
 		return connectionPool;
+	}
+
+	private class InnerConnection {
+		private Connection connection = null;
+		private Long timestamp = null;
+
+		public InnerConnection(Connection connection, Long timestamp) {
+			super();
+			this.connection = connection;
+			this.timestamp = timestamp;
+		}
+
+		public Connection getConnection() {
+			return connection;
+		}
+
+		public void setConnection(Connection connection) {
+			this.connection = connection;
+		}
+
+		public Long getTimestamp() {
+			return timestamp;
+		}
+
+		public void setTimestamp(Long timestamp) {
+			this.timestamp = timestamp;
+		}
 	}
 
 }

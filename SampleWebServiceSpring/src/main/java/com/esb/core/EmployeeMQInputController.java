@@ -2,6 +2,8 @@ package com.esb.core;
 
 import java.io.IOException;
 
+import javax.jms.JMSException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class EmployeeMQInputController {
 	}
 
 	@RequestMapping(path = "/EmployeeMQInput/startFlow", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<FlowStatusResponse> startFlow() throws IOException {
+	public ResponseEntity<FlowStatusResponse> startFlow() throws IOException, JMSException {
 		employeeMQInput.init();
 		FlowStatusResponse flowResp = new FlowStatusResponse();
 		flowResp.setStatus(1);
@@ -44,7 +46,7 @@ public class EmployeeMQInputController {
 	}
 
 	@RequestMapping(path = "/EmployeeMQInput/reloadFlow", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<FlowStatusResponse> reloadFlow() throws IOException {
+	public ResponseEntity<FlowStatusResponse> reloadFlow() throws IOException, JMSException {
 		employeeMQInput.shutdown();
 		try {
 			Thread.sleep(5000);
@@ -57,7 +59,7 @@ public class EmployeeMQInputController {
 	}
 
 	@RequestMapping(path = "/EmployeeMQInput/setParameters/{threads}/{tps}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<FlowStatusResponse> setParameters(@PathVariable Integer threads, @PathVariable Integer tps) throws IOException {
+	public ResponseEntity<FlowStatusResponse> setParameters(@PathVariable Integer threads, @PathVariable Integer tps) throws IOException, JMSException {
 		employeeMQInput.shutdown();
 		try {
 			Thread.sleep(5000);
